@@ -23,15 +23,31 @@ public class CommonService {
         for (QueryEndpoint endpoint:endpoints
              ) {
             String url =endpoint.getEndpoint();
+//            System.out.println(url+" URI common service line 26");
             Responsebean response = restTemplate.postForObject(url,req_object,Responsebean.class);
+//            debug code ------------------------------------------
+//            System.out.println(response.getValue()+response.getCode());
+//            debug code ------------------------------------------
+            HashMap<String,String> responsemap =(HashMap<String, String>) response.getValue();
+//            System.out.println("debug code from commonservice line 32 "+responsemap.get("response"));
             request =new HashMap();
-            for (String val:endpoint.getResponse_attribs()
-                 ) {
-                assert response != null;
-                Field field =GetAttributeValue(response.getValue(),val);
-                if(field!=null){
-                    request.put(val,field.toGenericString());
+            try {
+                if(endpoint.getResponse_attribs()!= null){
+                    for (String val:endpoint.getResponse_attribs()
+                    ) {
+                        assert response != null;
+                        String field =responsemap.get(val);
+                        if(field!=null){
+                            System.out.println("common service line 38 "+field);
+                            request.put(val,field);
+                        }
+                    }
                 }
+                else {
+                    request=responsemap;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
         return request;

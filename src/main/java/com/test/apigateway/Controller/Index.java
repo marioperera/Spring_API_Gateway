@@ -37,9 +37,15 @@ public class Index {
     public ResponseEntity<Responsebean> resolve(@PathVariable String endpoint, HashMap req_object){
 
         ResponseEntity responseEntity;
+        System.out.println(endpoint);
         try {
             List<QueryEndpoint> endpoints= getUrlEndpointService.GetURL(endpoint);
             Responsebean resp =new Responsebean();
+//            System.out.println("-- from index controller line 43 --");
+//            for (QueryEndpoint queryEndpoint:endpoints
+//                 ) {
+//                System.out.println(queryEndpoint.getEndpoint());
+//            }
             resp.setValue(commonService.get_response(req_object,endpoints));
 
             responseEntity =new ResponseEntity(resp,HttpStatus.OK);
@@ -63,6 +69,14 @@ public class Index {
         return "ok";
     }
 
-
+    @PostMapping("/test")
+    public Responsebean test(){
+        System.out.println("test route called --> index controller line 74 ");
+        Responsebean resp =new Responsebean();
+        HashMap<String,String> respmap =new HashMap<String, String>();
+        respmap.put("response","hello");
+        resp.setValue(respmap);
+        return resp;
+    }
 
 }

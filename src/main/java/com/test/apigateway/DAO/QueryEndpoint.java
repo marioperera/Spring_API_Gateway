@@ -1,6 +1,5 @@
 package com.test.apigateway.DAO;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,10 +8,10 @@ import java.util.List;
  */
 public class QueryEndpoint {
     private String endpoint;
-    private List<RequestParameter> requestParameters;
+    private List<Parameter> parameters;
     private String[] response_attribs;
 
-    public QueryEndpoint(String s, List<RequestParameter> reqs) {
+    public QueryEndpoint() {
     }
 
     public String[] getResponse_attribs() {
@@ -31,11 +30,11 @@ public class QueryEndpoint {
         this.endpoint = endpoint;
     }
 
-    public List<RequestParameter> getRequestParameters() {
-        return requestParameters;
+    public List<Parameter> getParameters() {
+        return parameters;
     }
 
-    public void setRequestParameters(List<RequestParameter> requestParameters) {
-        this.requestParameters = requestParameters;
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
     }
 }
