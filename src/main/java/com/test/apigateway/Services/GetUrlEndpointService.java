@@ -20,16 +20,28 @@ public class GetUrlEndpointService {
         System.out.println("GetURL called from line 20 ");
         reqs.add(new Parameter("GET","hello","hello"));
 
+//      Mock objects for testing
+//      -------------------------------------
         QueryEndpoint queryEndpoint =new QueryEndpoint();
         queryEndpoint.setEndpoint("http://localhost:4001/api/test");
         queryEndpoint.setParameters(reqs);
         queryEndpoint.setResponse_attribs(new String[]{"response"});
         List<QueryEndpoint> endpoints=new ArrayList<QueryEndpoint>();
+//      ---------------------------------------
+        QueryEndpoint queryEndpoint2 =new QueryEndpoint();
+        queryEndpoint2.setEndpoint("http://localhost:4001/api/test2");
+        queryEndpoint2.setParameters(reqs);
+        queryEndpoint2.setResponse_attribs(new String[]{"response"});
+
         endpoints.add(queryEndpoint);
+        endpoints.add(queryEndpoint2);
+//      ------------------------------------------
+//      end of Mock objects
+
         System.out.println("logging from GETURL service line 26 ");
         for (QueryEndpoint ep:endpoints
              ) {
-            System.out.println(ep.getEndpoint());
+            System.out.println("get url service line 44 "+ep.getEndpoint());
         }
         return endpoints;
     }

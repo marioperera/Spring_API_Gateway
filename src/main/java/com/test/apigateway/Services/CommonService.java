@@ -7,12 +7,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
  * @author mario_p
  * @Date 10/4/2019
  */
+
 @Service
 public class CommonService {
 
@@ -28,7 +30,7 @@ public class CommonService {
 //            debug code ------------------------------------------
 //            System.out.println(response.getValue()+response.getCode());
 //            debug code ------------------------------------------
-            HashMap<String,String> responsemap =(HashMap<String, String>) response.getValue();
+            LinkedHashMap<String,String> responsemap =(LinkedHashMap<String, String>) response.getValue();
 //            System.out.println("debug code from commonservice line 32 "+responsemap.get("response"));
             request =new HashMap();
             try {

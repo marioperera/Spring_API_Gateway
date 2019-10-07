@@ -79,4 +79,14 @@ public class Index {
         return resp;
     }
 
+    @PostMapping("/test2")
+    public Responsebean test2(){
+        System.out.println("test route called --> index controller line 84 ");
+        Responsebean resp =new Responsebean();
+        HashMap<String,String> respmap =new HashMap<String, String>();
+        respmap.put("response","hello from test2");
+        resp.setValue(respmap);
+        return resp;
+    }
+
 }
