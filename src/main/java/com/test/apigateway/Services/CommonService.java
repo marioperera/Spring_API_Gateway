@@ -42,11 +42,14 @@ public class CommonService {
                         if(field!=null){
                             System.out.println("common service line 38 "+field);
                             request.put(val,field);
+
                         }
+                        req_object=request;
                     }
                 }
                 else {
                     request=responsemap;
+                    req_object=request;
                 }
             }catch (Exception e){
                 e.printStackTrace();

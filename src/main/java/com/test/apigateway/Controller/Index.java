@@ -10,8 +10,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * @author mario_p
@@ -34,8 +34,9 @@ public class Index {
     }
 
     @PostMapping("/query/{endpoint}")
-    public ResponseEntity<Responsebean> resolve(@PathVariable String endpoint, HashMap req_object){
+    public ResponseEntity<Responsebean> resolve(@RequestBody HashMap<String,String> req_object,@PathVariable String endpoint){
 
+        System.out.println("index controller line 39 "+req_object.keySet());
         ResponseEntity responseEntity;
         System.out.println(endpoint);
         try {
@@ -70,23 +71,45 @@ public class Index {
     }
 
     @PostMapping("/test")
-    public Responsebean test(){
+    public Responsebean test(@RequestBody HashMap<String,String> requestBody ){
         System.out.println("test route called --> index controller line 74 ");
+
+        System.out.println("index controller line 77 "+requestBody.keySet());
+
+
         Responsebean resp =new Responsebean();
         HashMap<String,String> respmap =new HashMap<String, String>();
-        respmap.put("response","hello");
+        respmap.put("name1","hello");
         resp.setValue(respmap);
         return resp;
     }
 
     @PostMapping("/test2")
-    public Responsebean test2(){
+    public Responsebean test2(@RequestBody HashMap<String,String> requestBody){
         System.out.println("test route called --> index controller line 84 ");
+        System.out.println(requestBody.keySet());
         Responsebean resp =new Responsebean();
         HashMap<String,String> respmap =new HashMap<String, String>();
-        respmap.put("response","hello from test2");
+        respmap.put("name1","hello from test2");
         resp.setValue(respmap);
         return resp;
+    }
+
+    public Field GetAttributeValue(Object o, String FiledName) throws NullPointerException{
+        Class<?> clazz = o.getClass();
+
+        for(Field field : clazz.getDeclaredFields()) {
+            //you can also use .toGenericString() instead of .getName(). This will
+            //give you the type information as well.
+
+            if(field.getName().equals(FiledName)){
+                return field;
+            }
+            System.out.println("logging from index controller line 106 ");
+            LinkedHashMap resultmap =new LinkedHashMap(Integer.parseInt(field.toGenericString()));
+
+        }
+        return null;
     }
 
 }

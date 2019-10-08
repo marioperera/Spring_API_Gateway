@@ -6,6 +6,9 @@ import java.util.List;
  * @author mario_p
  * @Date 10/4/2019
  */
+
+//@ElementCollection
+//    List<Double> data;
 public class QueryEndpoint {
     private String endpoint;
     private List<Parameter> parameters;

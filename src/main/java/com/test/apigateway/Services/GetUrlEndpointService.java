@@ -25,13 +25,13 @@ public class GetUrlEndpointService {
         QueryEndpoint queryEndpoint =new QueryEndpoint();
         queryEndpoint.setEndpoint("http://localhost:4001/api/test");
         queryEndpoint.setParameters(reqs);
-        queryEndpoint.setResponse_attribs(new String[]{"response"});
+        queryEndpoint.setResponse_attribs(new String[]{"name1"});
         List<QueryEndpoint> endpoints=new ArrayList<QueryEndpoint>();
 //      ---------------------------------------
         QueryEndpoint queryEndpoint2 =new QueryEndpoint();
         queryEndpoint2.setEndpoint("http://localhost:4001/api/test2");
         queryEndpoint2.setParameters(reqs);
-        queryEndpoint2.setResponse_attribs(new String[]{"response"});
+        queryEndpoint2.setResponse_attribs(new String[]{"name1"});
 
         endpoints.add(queryEndpoint);
         endpoints.add(queryEndpoint2);
