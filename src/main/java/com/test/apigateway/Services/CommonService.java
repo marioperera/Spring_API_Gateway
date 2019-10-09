@@ -1,7 +1,8 @@
 package com.test.apigateway.Services;
 
 import com.test.apigateway.DAO.QueryEndpoint;
-import com.test.apigateway.DAO.Responsebean;
+import com.test.apigateway.DAO.ResponseAttribute;
+import com.test.apigateway.Beans.Responsebean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,10 +36,10 @@ public class CommonService {
             request =new HashMap();
             try {
                 if(endpoint.getResponse_attribs()!= null){
-                    for (String val:endpoint.getResponse_attribs()
+                    for (ResponseAttribute val:endpoint.getResponse_attribs()
                     ) {
                         assert response != null;
-                        String field =responsemap.get(val);
+                        String field =responsemap.get(val.getAttribute());
                         if(field!=null){
                             System.out.println("common service line 38 "+field);
                             request.put(val,field);

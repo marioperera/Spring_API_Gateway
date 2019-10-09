@@ -1,7 +1,8 @@
 package com.test.apigateway.Controller;
 
+import com.test.apigateway.Beans.RegisterApiTemplateBean;
 import com.test.apigateway.DAO.QueryEndpoint;
-import com.test.apigateway.DAO.Responsebean;
+import com.test.apigateway.Beans.Responsebean;
 import com.test.apigateway.Services.CommonService;
 import com.test.apigateway.Services.GetUrlEndpointService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,21 @@ public class Index {
 
 
     }
+//    json Object model for reference
+//    {"endpoint":"TEST",
+//            "type":"POST",
+//            "call_list":{
+//        "1":{
+//            "1":["test1"],
+//            "2":["test2"]
+//        }
+//    }
+//    }
 
     @PostMapping("/register")
-    public String register(RequestEntity<Object> resister_obj){
+    public String register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
+        System.out.println("logging from index controller /register line 71");
+        System.out.println(registerApiTemplateBean.getCall_list().get("1").size());
         return "ok";
     }
 

@@ -1,41 +1,33 @@
 package com.test.apigateway.DAO;
 
+import javax.persistence.*;
+
 /**
  * @author mario_p
  * @Date 10/4/2019
  */
+@Entity
+@Table(name = "PARAMETERS")
 public class Parameter {
-    private String type;
-    private String name;
-    private String value;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Column(name = "PARAMETER_NAME")
+    private String paramname;
 
-    public Parameter(String type, String name, String value) {
-        this.type = type;
-        this.name = name;
-        this.value = value;
+    public int getId() {
+        return id;
     }
 
-    public String getType() {
-        return type;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public String getParamname() {
+        return paramname;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setParamname(String paramname) {
+        this.paramname = paramname;
     }
 }

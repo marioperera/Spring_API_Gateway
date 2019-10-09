@@ -1,5 +1,6 @@
 package com.test.apigateway.DAO;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -9,19 +10,47 @@ import java.util.List;
 
 //@ElementCollection
 //    List<Double> data;
+
+@Entity
+@Table(name = "ENPOINTS_FOR_REGISTER_NEW_APIS")
 public class QueryEndpoint {
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Column(name = "API_ENDPOINTS")
     private String endpoint;
+    @Column(name = "REQUEST_TYPE")
+    private String type;
+
+    @OneToMany
     private List<Parameter> parameters;
-    private String[] response_attribs;
+
+    @OneToMany
+    private List<ResponseAttribute> response_attribs;
 
     public QueryEndpoint() {
     }
 
-    public String[] getResponse_attribs() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<ResponseAttribute> getResponse_attribs() {
         return response_attribs;
     }
 
-    public void setResponse_attribs(String[] response_attribs) {
+    public void setResponse_attribs(List<ResponseAttribute> response_attribs) {
         this.response_attribs = response_attribs;
     }
 
