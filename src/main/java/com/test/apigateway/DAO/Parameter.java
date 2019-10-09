@@ -15,6 +15,10 @@ public class Parameter {
     @Column(name = "PARAMETER_NAME")
     private String paramname;
 
+    public Parameter(String name) {
+        this.paramname =name;
+    }
+
     public int getId() {
         return id;
     }

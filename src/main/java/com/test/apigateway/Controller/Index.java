@@ -1,9 +1,12 @@
 package com.test.apigateway.Controller;
 
 import com.test.apigateway.Beans.RegisterApiTemplateBean;
-import com.test.apigateway.DAO.QueryEndpoint;
+import com.test.apigateway.Beans.SaveNewApiBean;
+import com.test.apigateway.DAO.*;
 import com.test.apigateway.Beans.Responsebean;
+import com.test.apigateway.Repositories.SaveNewApiObjRepository;
 import com.test.apigateway.Services.CommonService;
+import com.test.apigateway.Services.GenrateListService;
 import com.test.apigateway.Services.GetUrlEndpointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,11 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 public class Index {
+    @Autowired
+    SaveNewApiObjRepository saveNewApiObjRepository;
+
+    @Autowired
+    GenrateListService genrateListService;
 
     @Autowired
     GetUrlEndpointService getUrlEndpointService;
@@ -61,10 +69,37 @@ public class Index {
             return responseEntity;
         }
 
-
-
-
     }
+
+//    /addApi request model
+////    {"endpoint":"TEST",
+////            "type":"POST",
+////            "requestparams":{
+////        "test1":"string",
+////                "test1":"string"
+////    },
+////        "responseparams":{
+////        "test2":"string",
+////                "test1":"string"
+////    }
+////    }
+
+    @PostMapping("/addApi")
+    public SaveNewApiObj add(@RequestBody SaveNewApiBean saveNewApiBean){
+        System.out.println(saveNewApiBean.getEndpoint());
+        System.out.println(saveNewApiBean.getRequestparams());
+        SaveNewApiObj DAObean =new SaveNewApiObj();
+        DAObean.setUrl(saveNewApiBean.getEndpoint());
+        DAObean.setType(saveNewApiBean.getType());
+
+        DAObean.setParameters(genrateListService.convertSetToList_parameter(saveNewApiBean.getRequestparams().keySet()));
+        DAObean.setResponseAttributes(genrateListService.convertSetToList_attribute(saveNewApiBean.getResponseparams().keySet()));
+        return saveNewApiObjRepository.save(DAObean);
+//
+//        System.out.println(DAObean.getResponseAttributes().size());
+//        return null;
+    }
+
 //    json Object model for reference
 //    {"endpoint":"TEST",
 //            "type":"POST",
@@ -79,7 +114,16 @@ public class Index {
     @PostMapping("/register")
     public String register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
         System.out.println("logging from index controller /register line 71");
-        System.out.println(registerApiTemplateBean.getCall_list().get("1").size());
+        System.out.println(registerApiTemplateBean.getCall_list().get("1").get("1"));
+        System.out.println(registerApiTemplateBean.getCall_list());
+        RegisterNewApiObject registerNewApiObject =new RegisterNewApiObject();
+        registerNewApiObject.setNew_endpoint(registerApiTemplateBean.getEndpoint());
+        registerNewApiObject.setType(registerApiTemplateBean.getType());
+        for (String id:registerApiTemplateBean.getCall_list().keySet()) {
+            
+        }
+
+
         return "ok";
     }
 

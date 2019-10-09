@@ -21,10 +21,10 @@ public class SaveNewApiObj {
     @Column(name = "REQUEST_TYPE")
     private String type;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Parameter> parameters;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ResponseAttribute> responseAttributes;
 
     public int getId() {
