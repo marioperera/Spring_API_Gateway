@@ -1,18 +1,21 @@
 package com.test.apigateway.Services;
 
 import com.test.apigateway.DAO.QueryEndpoint;
-import com.test.apigateway.DAO.Responsebean;
+import com.test.apigateway.DAO.ResponseAttribute;
+import com.test.apigateway.Beans.Responsebean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
  * @author mario_p
  * @Date 10/4/2019
  */
+
 @Service
 public class CommonService {
 
@@ -28,23 +31,26 @@ public class CommonService {
 //            debug code ------------------------------------------
 //            System.out.println(response.getValue()+response.getCode());
 //            debug code ------------------------------------------
-            HashMap<String,String> responsemap =(HashMap<String, String>) response.getValue();
+            LinkedHashMap<String,String> responsemap =(LinkedHashMap<String, String>) response.getValue();
 //            System.out.println("debug code from commonservice line 32 "+responsemap.get("response"));
             request =new HashMap();
             try {
                 if(endpoint.getResponse_attribs()!= null){
-                    for (String val:endpoint.getResponse_attribs()
+                    for (ResponseAttribute val:endpoint.getResponse_attribs()
                     ) {
                         assert response != null;
-                        String field =responsemap.get(val);
+                        String field =responsemap.get(val.getAttribute());
                         if(field!=null){
                             System.out.println("common service line 38 "+field);
                             request.put(val,field);
+
                         }
+                        req_object=request;
                     }
                 }
                 else {
                     request=responsemap;
+                    req_object=request;
                 }
             }catch (Exception e){
                 e.printStackTrace();

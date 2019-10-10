@@ -1,4 +1,4 @@
-package com.test.apigateway.DAO;
+package com.test.apigateway.Beans;
 
 /**
  * @author mario_p
