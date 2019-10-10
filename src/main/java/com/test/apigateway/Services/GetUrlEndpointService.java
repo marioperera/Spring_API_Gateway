@@ -53,7 +53,7 @@ public class GetUrlEndpointService {
 //            System.out.println("get url service line 44 "+ep.getEndpoint());
 //        }
         RegisterNewApiObject endpoints = registerNewApiObjectRepository
-                                        .getByNewEndpoint("http://localhost:4001/api/query/"+endpoint);
+                                        .getByNewEndpoint("http://localhost:4001/api/"+endpoint);
 
         return endpoints.getQueryEndpoints();
     }

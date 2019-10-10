@@ -15,6 +15,10 @@ public class ResponseAttribute {
     @Column(name = "ATTRIBUTE_NAME")
     private String attribute;
 
+    public ResponseAttribute(){
+
+    }
+
     public ResponseAttribute(String s) {
         attribute =s;
     }

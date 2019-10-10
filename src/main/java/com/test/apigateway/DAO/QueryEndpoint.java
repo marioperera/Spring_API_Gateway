@@ -21,10 +21,11 @@ public class QueryEndpoint {
     @Column(name = "REQUEST_TYPE")
     private String type;
 
-    @OneToMany
+    @Transient
+//    @OneToMany
     private List<Parameter> parameters;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ResponseAttribute> response_attribs;
 
     public QueryEndpoint() {

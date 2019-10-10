@@ -9,6 +9,7 @@ import com.test.apigateway.Repositories.SaveNewApiObjRepository;
 import com.test.apigateway.Services.CommonService;
 import com.test.apigateway.Services.GenrateListService;
 import com.test.apigateway.Services.GetUrlEndpointService;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -48,7 +49,7 @@ public class Index {
     @PostMapping("/query/{endpoint}")
     public ResponseEntity<Responsebean> resolve(@RequestBody HashMap<String,String> req_object,@PathVariable String endpoint){
 
-        System.out.println("index controller line 39 "+req_object.keySet());
+        System.out.println("index controller line 52 "+req_object.keySet());
         ResponseEntity responseEntity;
         System.out.println(endpoint);
         try {
@@ -132,15 +133,21 @@ public class Index {
             queryEndpoint.setEndpoint(saveNewApiObj.getUrl());
             queryEndpoint.setParameters(saveNewApiObj.getParameters());
             List<ResponseAttribute> required_responses =new ArrayList<>();
-            for (String key:registerApiTemplateBean.getCall_list().get(id).keySet()
+            for (String[] key:registerApiTemplateBean.getCall_list().get(id).values()
                  ) {
-                required_responses.add(new ResponseAttribute(key));
+                required_responses.add(new ResponseAttribute(key[0]));
             }
             queryEndpoint.setResponse_attribs(required_responses);
             queryobjects.add(queryEndpoint);
         }
         registerNewApiObject.setQueryEndpoints(queryobjects);
-        registerNewApiObjectRepository.save(registerNewApiObject);
+        System.out.println(registerNewApiObject.getQueryEndpoints());
+        try{
+            registerNewApiObjectRepository.save(registerNewApiObject);
+        }catch (HibernateException e){
+            e.printStackTrace();
+        }
+
 
 
 
@@ -161,7 +168,7 @@ public class Index {
         return resp;
     }
 
-    @PostMapping("/test2")
+    @PostMapping("/test1")
     public Responsebean test2(@RequestBody HashMap<String,String> requestBody){
         System.out.println("test route called --> index controller line 84 ");
         System.out.println(requestBody.keySet());
