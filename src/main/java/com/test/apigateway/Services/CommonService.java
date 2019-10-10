@@ -27,12 +27,20 @@ public class CommonService {
              ) {
             String url =endpoint.getEndpoint();
             System.out.println(url+" URI common service line 26");
-            Responsebean response = restTemplate.postForObject(url,req_object,Responsebean.class);
-//            debug code ------------------------------------------
-//            System.out.println(response.getValue()+response.getCode());
-//            debug code ------------------------------------------
+            Responsebean response =new Responsebean();
+            System.out.println("endpoint type is "+endpoint.getType());
+
+//          request will be send according to its request type
+
+            if(endpoint.getType().equals("POST")){
+                response = restTemplate.postForObject(url,req_object,Responsebean.class);
+            }else {
+                response = restTemplate.getForObject(url,Responsebean.class);
+            }
+
+
             LinkedHashMap<String,String> responsemap =(LinkedHashMap<String, String>) response.getValue();
-//            System.out.println("debug code from commonservice line 32 "+responsemap.get("response"));
+
             request =new HashMap();
             try {
                 if(endpoint.getResponse_attribs()!= null){
@@ -44,7 +52,7 @@ public class CommonService {
                         System.out.println("common service line 44 attributes "+val.getAttribute());
                         if(field!=null){
 
-                            request.put(val,field);
+                            request.put(val.getAttribute(),field);
 
 
                         }
@@ -52,7 +60,7 @@ public class CommonService {
 
                     }
                     req_object=request;
-//                    System.out.println(req_object);
+
                 }
                 else {
                     request=responsemap;

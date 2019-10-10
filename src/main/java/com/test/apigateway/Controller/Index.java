@@ -132,6 +132,7 @@ public class Index {
             QueryEndpoint queryEndpoint =new QueryEndpoint();
             queryEndpoint.setEndpoint(saveNewApiObj.getUrl());
             queryEndpoint.setParameters(saveNewApiObj.getParameters());
+            queryEndpoint.setType(saveNewApiObj.getType());
             List<ResponseAttribute> required_responses =new ArrayList<>();
             for (String[] key:registerApiTemplateBean.getCall_list().get(id).values()
                  ) {
