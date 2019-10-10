@@ -14,12 +14,20 @@ public class Parameter {
     private int id;
     @Column(name = "PARAMETER_NAME")
     private String paramname;
+    
+    @Column(name = "TYPE")
+    private String type;
 
     public Parameter(String name) {
         this.paramname =name;
     }
 
-    public int getId() {
+    public Parameter(String paramname, String type) {
+		this.paramname = paramname;
+		this.type = type;
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -34,4 +42,14 @@ public class Parameter {
     public void setParamname(String paramname) {
         this.paramname = paramname;
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+    
+    
 }
