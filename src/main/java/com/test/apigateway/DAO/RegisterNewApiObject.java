@@ -15,12 +15,12 @@ public class RegisterNewApiObject {
     private int id;
 
     @Column(name = "API_ENDPOINT")
-    private String new_endpoint;
+    private String newEndpoint;
 
     @Column(name = "REQUEST_TYPE")
     private String type;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<QueryEndpoint> queryEndpoints;
 
     public int getId() {
@@ -31,12 +31,12 @@ public class RegisterNewApiObject {
         this.id = id;
     }
 
-    public String getNew_endpoint() {
-        return new_endpoint;
+    public String getNewEndpoint() {
+        return newEndpoint;
     }
 
-    public void setNew_endpoint(String new_endpoint) {
-        this.new_endpoint = new_endpoint;
+    public void setNewEndpoint(String newEndpoint) {
+        this.newEndpoint = newEndpoint;
     }
 
     public String getType() {

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RegisterNewApiObjectRepository extends JpaRepository<RegisterNewApiObject ,Integer> {
+
+    RegisterNewApiObject getByNewEndpoint(String newEndpoint);
 }
