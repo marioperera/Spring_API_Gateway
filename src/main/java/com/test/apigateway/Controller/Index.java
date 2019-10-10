@@ -4,6 +4,7 @@ import com.test.apigateway.Beans.RegisterApiTemplateBean;
 import com.test.apigateway.Beans.SaveNewApiBean;
 import com.test.apigateway.DAO.*;
 import com.test.apigateway.Beans.Responsebean;
+import com.test.apigateway.Repositories.RegisterNewApiObjectRepository;
 import com.test.apigateway.Repositories.SaveNewApiObjRepository;
 import com.test.apigateway.Services.CommonService;
 import com.test.apigateway.Services.GenrateListService;
@@ -26,6 +27,8 @@ import java.util.*;
 public class Index {
     @Autowired
     SaveNewApiObjRepository saveNewApiObjRepository;
+    @Autowired
+    RegisterNewApiObjectRepository registerNewApiObjectRepository;
 
     @Autowired
     GenrateListService genrateListService;
@@ -113,15 +116,32 @@ public class Index {
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
-        System.out.println("logging from index controller /register line 71");
-        System.out.println(registerApiTemplateBean.getCall_list().get("1").get("1"));
-        System.out.println(registerApiTemplateBean.getCall_list());
+//        System.out.println("logging from index controller /register line 71");
+//        System.out.println(registerApiTemplateBean.getCall_list().get("1").get("1"));
+//        System.out.println(registerApiTemplateBean.getCall_list());
         RegisterNewApiObject registerNewApiObject =new RegisterNewApiObject();
-        registerNewApiObject.setNew_endpoint(registerApiTemplateBean.getEndpoint());
+        registerNewApiObject.setNewEndpoint(registerApiTemplateBean.getEndpoint());
         registerNewApiObject.setType(registerApiTemplateBean.getType());
+        List<QueryEndpoint> queryobjects =new ArrayList<>();
+
+
         for (String id:registerApiTemplateBean.getCall_list().keySet()) {
-            
+//            get savenewApiObject from service for the given id and add its attributes to the Queryendpoint object
+            SaveNewApiObj saveNewApiObj=saveNewApiObjRepository.getOne(Integer.parseInt(id));
+            QueryEndpoint queryEndpoint =new QueryEndpoint();
+            queryEndpoint.setEndpoint(saveNewApiObj.getUrl());
+            queryEndpoint.setParameters(saveNewApiObj.getParameters());
+            List<ResponseAttribute> required_responses =new ArrayList<>();
+            for (String key:registerApiTemplateBean.getCall_list().get(id).keySet()
+                 ) {
+                required_responses.add(new ResponseAttribute(key));
+            }
+            queryEndpoint.setResponse_attribs(required_responses);
+            queryobjects.add(queryEndpoint);
         }
+        registerNewApiObject.setQueryEndpoints(queryobjects);
+        registerNewApiObjectRepository.save(registerNewApiObject);
+
 
 
         return "ok";
