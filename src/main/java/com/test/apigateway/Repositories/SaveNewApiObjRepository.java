@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SaveNewApiObjRepository extends JpaRepository<SaveNewApiObj,Integer> {
+	
+	SaveNewApiObj findByUrlAndType(String url, String type);
 }

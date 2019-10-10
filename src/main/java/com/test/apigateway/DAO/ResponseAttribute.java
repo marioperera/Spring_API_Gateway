@@ -14,6 +14,9 @@ public class ResponseAttribute {
 
     @Column(name = "ATTRIBUTE_NAME")
     private String attribute;
+    
+    @Column(name = "TYPE")
+    private String type;
 
     public ResponseAttribute(){
 
@@ -23,7 +26,12 @@ public class ResponseAttribute {
         attribute =s;
     }
 
-    public int getId() {
+    public ResponseAttribute(String attribute, String type) {
+		this.attribute = attribute;
+		this.type = type;
+	}
+    
+	public int getId() {
         return id;
     }
 
@@ -38,4 +46,14 @@ public class ResponseAttribute {
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+    
+    
 }

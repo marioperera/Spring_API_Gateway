@@ -9,7 +9,12 @@ import com.test.apigateway.Repositories.SaveNewApiObjRepository;
 import com.test.apigateway.Services.CommonService;
 import com.test.apigateway.Services.GenrateListService;
 import com.test.apigateway.Services.GetUrlEndpointService;
+
+import com.test.apigateway.Services.RegisterVerifyService;
+
+
 import org.hibernate.HibernateException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -36,6 +41,9 @@ public class Index {
 
     @Autowired
     GetUrlEndpointService getUrlEndpointService;
+    
+    @Autowired
+    RegisterVerifyService registerVerifyService;
 
     @Autowired
     CommonService commonService;
@@ -89,19 +97,35 @@ public class Index {
 ////    }
 
     @PostMapping("/addApi")
-    public SaveNewApiObj add(@RequestBody SaveNewApiBean saveNewApiBean){
+    public  ResponseEntity<String> add(@RequestBody SaveNewApiBean saveNewApiBean){
         System.out.println(saveNewApiBean.getEndpoint());
         System.out.println(saveNewApiBean.getRequestparams());
-        SaveNewApiObj DAObean =new SaveNewApiObj();
-        DAObean.setUrl(saveNewApiBean.getEndpoint());
-        DAObean.setType(saveNewApiBean.getType());
-
-        DAObean.setParameters(genrateListService.convertSetToList_parameter(saveNewApiBean.getRequestparams().keySet()));
-        DAObean.setResponseAttributes(genrateListService.convertSetToList_attribute(saveNewApiBean.getResponseparams().keySet()));
-        return saveNewApiObjRepository.save(DAObean);
-//
-//        System.out.println(DAObean.getResponseAttributes().size());
-//        return null;
+        
+        SaveNewApiObj registeredApi = saveNewApiObjRepository.findByUrlAndType(saveNewApiBean.getEndpoint(), saveNewApiBean.getType());
+        System.out.println("api " + registeredApi);
+        if(registeredApi != null) {
+        	return ResponseEntity.ok().body("Already regitered url");
+        }
+        else {
+        	
+        	List<Parameter> requestParams = genrateListService.convertSetToListparameterWithType(saveNewApiBean.getRequestparams());
+            
+        	int status = registerVerifyService.validateApi(saveNewApiBean.getEndpoint(), saveNewApiBean.getType(), requestParams, saveNewApiBean.getRequestValues());
+            System.out.println("status "+ status);
+        	
+        	if(status == 400) {
+        		return ResponseEntity.ok().body("Bad Request");
+        	}
+        	else {
+        		SaveNewApiObj DAObean = new SaveNewApiObj();
+                DAObean.setUrl(saveNewApiBean.getEndpoint());
+                DAObean.setType(saveNewApiBean.getType());
+                DAObean.setParameters(requestParams);
+                DAObean.setResponseAttributes(genrateListService.convertSetToListattributeWithType(saveNewApiBean.getResponseparams()));
+                saveNewApiObjRepository.save(DAObean);
+                return ResponseEntity.ok().body("Successfully register");
+        	}
+        }
     }
 
 //    json Object model for reference
@@ -196,5 +220,15 @@ public class Index {
         }
         return null;
     }
+    
+    //Test url
+    @GetMapping("/test/{id}/{name}")
+	private ResponseEntity<String> testExistAPI( @PathVariable("id") String id, @PathVariable("name") String name) {
+		
+//		List<String> response = new ArrayList<String>();
+		String test = "Test is successful "+id+" "+name;
+		System.out.println("test");
+		return ResponseEntity.ok().body(test);
+	}
 
 }

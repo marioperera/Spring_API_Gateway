@@ -1,6 +1,7 @@
 package com.test.apigateway.Beans;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author mario_p
@@ -12,6 +13,7 @@ public class SaveNewApiBean  {
     String type;
     HashMap<String,String> requestparams;
     HashMap<String,String> responseparams;
+    List<String> requestValues;
 
     public String getEndpoint() {
         return endpoint;
@@ -44,4 +46,13 @@ public class SaveNewApiBean  {
     public void setResponseparams(HashMap<String, String> responseparams) {
         this.responseparams = responseparams;
     }
+
+	public List<String> getRequestValues() {
+		return requestValues;
+	}
+
+	public void setRequestValues(List<String> requestValues) {
+		this.requestValues = requestValues;
+	}
+      
 }
