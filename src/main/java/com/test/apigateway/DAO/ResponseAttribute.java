@@ -18,6 +18,10 @@ public class ResponseAttribute {
     @Column(name = "TYPE")
     private String type;
 
+    public ResponseAttribute(){
+
+    }
+
     public ResponseAttribute(String s) {
         attribute =s;
     }
