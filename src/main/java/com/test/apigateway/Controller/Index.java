@@ -48,12 +48,13 @@ public class Index {
     @Autowired
     CommonService commonService;
 
+    @CrossOrigin("*")
     @GetMapping("/query/{endpoint}")
     public RequestEntity<Object> resolve(@PathVariable String endpoint, RequestEntity<Object> req_object){
        return null;
 
     }
-
+    @CrossOrigin("*")
     @PostMapping("/query/{endpoint}")
     public ResponseEntity<Responsebean> resolve(@RequestBody HashMap<String,String> req_object,@PathVariable String endpoint){
 
