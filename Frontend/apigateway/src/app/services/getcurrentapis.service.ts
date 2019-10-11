@@ -11,7 +11,7 @@ export class GetcurrentapisService {
    }
 
    getSavedUrls(){
-    return this.httpclient.get('http://localhost:8080/hello').pipe(map(
+    return this.httpclient.get('http://localhost:4001/Utils/getregistedURLs').pipe(map(
       urlinfo =>{
         console.log(urlinfo);
         
