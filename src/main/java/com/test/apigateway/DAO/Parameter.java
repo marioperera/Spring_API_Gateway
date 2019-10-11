@@ -18,6 +18,9 @@ public class Parameter {
     @Column(name = "TYPE")
     private String type;
 
+    public Parameter() {
+    }
+
     public Parameter(String name) {
         this.paramname =name;
     }

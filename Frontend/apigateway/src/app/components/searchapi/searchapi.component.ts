@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import {GetcurrentapisService} from '../../services/getcurrentapis.service';
 
 @Component({
   selector: 'app-searchapi',
@@ -9,11 +10,13 @@ import {FormControl, Validators} from '@angular/forms';
 export class SearchapiComponent implements OnInit {
 
   public ischecked:boolean = false;
+  public URL_list:any[] =new Array();
 
-  constructor() { }
+  constructor(private geturlservice:GetcurrentapisService) { }
 
   ngOnInit() {
     console.log(this.ischecked);
+    this.geturlservice.getSavedUrls();
     
   }
   email = new FormControl('', [Validators.required]);
@@ -28,6 +31,7 @@ export class SearchapiComponent implements OnInit {
     console.log("log to console called");
     
     console.log(this.ischecked);
+    this.geturlservice.getSavedUrls();
     
   }
 

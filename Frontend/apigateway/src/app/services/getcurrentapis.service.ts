@@ -11,6 +11,8 @@ export class GetcurrentapisService {
    }
 
    getSavedUrls(){
+     console.log("service called");
+     
     return this.httpclient.get('http://localhost:4001/Utils/getregistedURLs').pipe(map(
       urlinfo =>{
         console.log(urlinfo);
