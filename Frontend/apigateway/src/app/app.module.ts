@@ -1,18 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatCardModule, MatRadioModule} from '@angular/material';
+import { FormsModule,  ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RegisterApiComponent } from './register-api/register-api.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    RegisterApiComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AppRoutingModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatIconModule,
+    MatCardModule,
+    MatRadioModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

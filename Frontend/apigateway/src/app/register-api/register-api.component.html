@@ -1,0 +1,99 @@
+<h4 class="text-center">
+    Register API Endpoint
+</h4>
+<div>
+    <form [formGroup]="options">
+        <div>
+            <label class="pr-3">API Endpoint type: </label>
+            <mat-radio-group  formControlName="floatLabel">  
+                <mat-radio-button class="pr-2" value="get">GET</mat-radio-button>
+                <mat-radio-button class="pr-2" value="post">POST</mat-radio-button>
+                <mat-radio-button class="pr-2" value="put">PUT</mat-radio-button>
+                <mat-radio-button class="pr-2" value="delete">DELETE</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </form>
+    {{options.value.floatLabel}}
+</div>
+<div *ngIf="options.value.floatLabel=='get'" class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8">
+        <div class="example-container">
+            <mat-form-field>
+                <input matInput #input placeholder="Enter API endpoint">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input [(ngModel)]="requestParamNo" type="number" matInput #input placeholder="Enter number of request parameters">
+            </mat-form-field>
+            <div class="row">
+                <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" (click)="addInput()">
+                    Add
+                </button>
+                </div>
+            </div>
+            <div *ngFor="let n of arr">
+                <mat-form-field>
+                    <input matInput #input placeholder="Parameter name">
+                </mat-form-field>
+                <mat-form-field class="pl-2">
+                    <mat-select placeholder="Select api type">
+                    <mat-option value="param">Url parameter</mat-option>
+                    <mat-option value="header">Request header</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="pl-2">
+                    <input matInput #input placeholder="testing value">
+                </mat-form-field>
+            </div>
+            <mat-form-field>
+                <input [(ngModel)]="reponseParamNo" type="number" matInput #input placeholder="Enter number of response parameters">
+            </mat-form-field>
+            <div class="row">
+                <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" (click)="addInputResponse()">
+                    Add
+                </button>
+                </div>
+            </div>
+            <div *ngFor="let n of arrResponse">
+                <mat-form-field>
+                    <input matInput #input placeholder="Parameter name">
+                </mat-form-field>
+                <mat-form-field class="pl-2">
+                    <mat-select placeholder="Select api type">
+                    <mat-option value="object">Object</mat-option>
+                    <mat-option value="string">String</mat-option>
+                    <mat-option value="integer">Integer</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="options.value.floatLabel=='post'" class="row">
+    <div class="col-sm-2">
+    </div>
+        <div class="col-sm-8">
+            <div class="example-container">
+                <mat-form-field>
+                    <input matInput #input placeholder="Enter API endpoint">
+                </mat-form-field>
+    
+                <mat-form-field>
+                        <input [(ngModel)]="requestParamNo" type="number" matInput #input placeholder="Enter number of request parameters">
+                </mat-form-field>
+                {{requestParamNo}}
+                <div *ngFor="let n of arr">
+                    
+                </div>
+                <mat-form-field>
+                    <mat-select placeholder="Select api type">
+                    <mat-option value="option">Option</mat-option>
+                    </mat-select>
+                </mat-form-field>
+        </div>
+        </div>
+</div>
