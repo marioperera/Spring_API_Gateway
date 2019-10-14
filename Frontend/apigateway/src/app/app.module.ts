@@ -13,6 +13,7 @@ import { CreatenewapiComponent } from './components/createnewapi/createnewapi.co
 import {MatInputModule} from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox'; 
 import {MatCardModule} from '@angular/material/card'; 
+import {MatSelectModule} from '@angular/material'
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { from } from 'rxjs';
 
@@ -35,7 +36,8 @@ import { from } from 'rxjs';
     MatInputModule,
     MatCheckboxModule,
     MatCardModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSelectModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent]

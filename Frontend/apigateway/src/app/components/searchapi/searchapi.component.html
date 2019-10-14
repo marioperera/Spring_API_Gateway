@@ -8,15 +8,17 @@
     </mat-form-field>
     <br>
     
-
-    <mat-card>
+    <!-- <button style="padding: 10px; margin-bottom: 10px; margin-left: 20px; " type="button" (click)="addtoUrlList()" class="btn btn-success">get url endpoints</button> -->
+    <mat-card *ngFor="let item of URL_list[0]">
         <div>
-            url:==
+            {{item.url}}
             <br>
-            <mat-checkbox (click) ="ischecked=!ischecked" >attribute-1</mat-checkbox>
+
+            <b>attributes</b>
+            <mat-checkbox style="padding: 10px;" *ngFor="let attrb of item.responseAttributes" (click) ="changeidtominus(item,attrb)" >{{attrb.attribute}}</mat-checkbox>
             <div class="">
                 <br>
-                <button type="button" (click)="addtoUrlList()" class="btn btn-primary">add to request</button>
+                <button type="button" (click)="addtoUrlList(item)" class="btn btn-primary">get from request</button>
             </div>
         </div>
     </mat-card>

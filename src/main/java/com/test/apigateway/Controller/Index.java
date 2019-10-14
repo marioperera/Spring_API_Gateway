@@ -139,7 +139,7 @@ public class Index {
 //        }
 //    }
 //    }
-
+    @CrossOrigin("*")
     @PostMapping("/register")
     public String register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
 //        System.out.println("logging from index controller /register line 71");
@@ -159,9 +159,9 @@ public class Index {
             queryEndpoint.setParameters(saveNewApiObj.getParameters());
             queryEndpoint.setType(saveNewApiObj.getType());
             List<ResponseAttribute> required_responses =new ArrayList<>();
-            for (String[] key:registerApiTemplateBean.getCall_list().get(id).values()
+            for (String key:registerApiTemplateBean.getCall_list().get(id)
                  ) {
-                required_responses.add(new ResponseAttribute(key[0]));
+                required_responses.add(new ResponseAttribute(key));
             }
             queryEndpoint.setResponse_attribs(required_responses);
             queryobjects.add(queryEndpoint);
