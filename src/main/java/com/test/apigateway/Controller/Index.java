@@ -130,18 +130,22 @@ public class Index {
     }
 
 //    json Object model for reference
-//    {"endpoint":"TEST",
-//            "type":"POST",
-//            "call_list":{
-//        "1":{
-//            "1":["test1"],
-//            "2":["test2"]
-//        }
-//    }
-//    }
+//{
+//    "endpoint": "http://localhost:4001/query/test",
+//        "type": "POST",
+//        "call_list": {
+//    "1": [
+//    "name2",
+//            "name1"
+//    ],
+//    "6": [
+//    "name2"
+//    ]
+//}
+//}
     @CrossOrigin("*")
     @PostMapping("/register")
-    public String register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
+    public Responsebean register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
 //        System.out.println("logging from index controller /register line 71");
 //        System.out.println(registerApiTemplateBean.getCall_list().get("1").get("1"));
 //        System.out.println(registerApiTemplateBean.getCall_list());
@@ -168,16 +172,19 @@ public class Index {
         }
         registerNewApiObject.setQueryEndpoints(queryobjects);
         System.out.println(registerNewApiObject.getQueryEndpoints());
+        Responsebean responsebean =new Responsebean();
         try{
-            registerNewApiObjectRepository.save(registerNewApiObject);
-        }catch (HibernateException e){
-            e.printStackTrace();
+            responsebean.setCode("ok");
+            responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+
+        }catch (Exception e){
+            responsebean.setCode("error");
+            responsebean.setValue(e.toString());
         }
 
+        return responsebean;
 
 
-
-        return "ok";
     }
 
     @PostMapping("/test")
