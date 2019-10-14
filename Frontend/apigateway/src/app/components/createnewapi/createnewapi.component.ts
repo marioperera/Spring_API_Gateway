@@ -34,6 +34,11 @@ export class CreatenewapiComponent implements OnInit {
     
   }
 
+  resetApis(){
+    localStorage.removeItem("call_list");
+    alert("resetted api list!")
+  }
+
   registernewApi(){
     console.log("register new api called");
     let request_obj ={};
