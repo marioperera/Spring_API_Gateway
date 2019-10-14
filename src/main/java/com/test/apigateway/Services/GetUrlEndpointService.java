@@ -22,7 +22,7 @@ public class GetUrlEndpointService {
     RegisterNewApiObjectRepository registerNewApiObjectRepository;
 
 
-    public List<QueryEndpoint> GetURL(String endpoint){
+    public List<QueryEndpoint> GetURL(String endpoint) throws Exception{
         List<Parameter> reqs =new ArrayList<Parameter>();
         System.out.println("GetURL called from line 20 ");
 ////        reqs.add(new Parameter("GET","hello","hello"));
@@ -53,7 +53,7 @@ public class GetUrlEndpointService {
 //            System.out.println("get url service line 44 "+ep.getEndpoint());
 //        }
         RegisterNewApiObject endpoints = registerNewApiObjectRepository
-                                        .getByNewEndpoint("http://localhost:4001/api/"+endpoint);
+                                        .getByNewEndpoint("http://localhost:4001/query/"+endpoint);
 
         return endpoints.getQueryEndpoints();
     }
