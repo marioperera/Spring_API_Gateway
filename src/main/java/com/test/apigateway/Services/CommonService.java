@@ -23,12 +23,14 @@ public class CommonService {
         RestTemplate restTemplate =new RestTemplate();
         HashMap request =req_object;
 
+        request =new HashMap();
+
         for (QueryEndpoint endpoint:endpoints
              ) {
             String url =endpoint.getEndpoint();
-            System.out.println(url+" URI common service line 26");
+//            System.out.println(url+" URI common service line 26");
             Responsebean response =new Responsebean();
-            System.out.println("endpoint type is "+endpoint.getType());
+//            System.out.println("endpoint type is "+endpoint.getType());
 
 //          request will be send according to its request type
 
@@ -40,36 +42,39 @@ public class CommonService {
 
 
             LinkedHashMap<String,String> responsemap =(LinkedHashMap<String, String>) response.getValue();
-
-            request =new HashMap();
+//          uncomment for chaining requests
+//            request =new HashMap();
             try {
                 if(endpoint.getResponse_attribs()!= null){
-                    System.out.println("printing response attributes for endpoint "+endpoint.getEndpoint()+" "+endpoint.getResponse_attribs());
+//                    System.out.println("printing response attributes for endpoint "+endpoint.getEndpoint().toString()+" "+endpoint.getResponse_attribs());
                     for (ResponseAttribute val:endpoint.getResponse_attribs()
                     ) {
-                        assert response != null;
+//                        assert response != null;
                         String field =responsemap.get(val.getAttribute());
                         System.out.println("common service line 44 attributes "+val.getAttribute());
                         if(field!=null){
 
                             request.put(val.getAttribute(),field);
+                            System.out.println("checking added keys to the key set"+request.keySet());
 
 
                         }
 
 
                     }
-                    req_object=request;
+//                    req_object=request;
 
                 }
-                else {
-                    request=responsemap;
-                    req_object=request;
-                }
+//                else {
+////                    uncomment for chaining requests
+////                    request=responsemap;
+////                    req_object=request;
+//                }
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
+        System.out.println(request);
         return request;
     }
 
