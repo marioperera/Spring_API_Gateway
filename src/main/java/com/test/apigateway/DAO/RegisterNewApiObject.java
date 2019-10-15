@@ -14,7 +14,7 @@ public class RegisterNewApiObject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "API_ENDPOINT")
+    @Column(name = "API_ENDPOINT",unique = true)
     private String newEndpoint;
 
     @Column(name = "REQUEST_TYPE")

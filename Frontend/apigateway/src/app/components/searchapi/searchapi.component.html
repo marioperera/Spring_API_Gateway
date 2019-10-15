@@ -1,0 +1,26 @@
+<div class="example-container" style="margin-left: 30%;"> 
+    <br>
+    <br>
+    <a>http://localhost:4001/api/  </a>
+    <mat-form-field>
+      <input matInput placeholder="URL endpoint" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br>
+    
+    <!-- <button style="padding: 10px; margin-bottom: 10px; margin-left: 20px; " type="button" (click)="addtoUrlList()" class="btn btn-success">get url endpoints</button> -->
+    <mat-card *ngFor="let item of URL_list[0]">
+        <div>
+            {{item.url}}
+            <br>
+
+            <b>attributes</b>
+            <mat-checkbox style="padding: 10px;" *ngFor="let attrb of item.responseAttributes" (click) ="changeidtominus(item,attrb)" >{{attrb.attribute}}</mat-checkbox>
+            <div class="">
+                <br>
+                <button type="button" (click)="addtoUrlList(item)" class="btn btn-primary">get from request</button>
+            </div>
+        </div>
+    </mat-card>
+
+  </div>

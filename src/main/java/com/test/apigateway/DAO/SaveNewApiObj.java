@@ -18,6 +18,10 @@ public class SaveNewApiObj {
     @Column(name = "API_URL")
     private String url;
 
+    public SaveNewApiObj() {
+
+    }
+
     @Column(name = "REQUEST_TYPE")
     private String type;
 

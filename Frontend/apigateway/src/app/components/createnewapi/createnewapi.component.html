@@ -1,0 +1,24 @@
+<div style="margin-left: 30%;" class="card-container">
+    <br>
+    <br>
+    <a>http://localhost:4001/query/  </a>
+    <mat-form-field>
+      <input matInput placeholder="URL endpoint" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+    
+    <br>
+    <a style="padding-right: 5%;"><b>Request type</b></a>
+    <mat-form-field>
+      
+      <mat-select (selectionChange)="getRequestType($event.value)" placeholder="Select">
+        <mat-option value="GET">GET</mat-option>
+        <mat-option value="POST">POST</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <br>
+    <button style="padding: 10px; margin-bottom: 10px; margin-left: 60px; " type="button" (click)="registernewApi()" class="btn btn-success"><b>Register new Api</b></button>
+    <button style="padding: 10px; margin-bottom: 10px; margin-left: 60px; " type="button" (click)="resetApis()" class="btn btn-success"><b>Reset API list</b></button>
+  </div>
+  
