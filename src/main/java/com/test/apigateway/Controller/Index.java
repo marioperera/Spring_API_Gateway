@@ -238,7 +238,7 @@ public class Index {
 		
 //		List<String> response = new ArrayList<String>();
 		String test = "Test is successful "+id+" "+name;
-		System.out.println("test");
+		System.out.println(test);
 		return ResponseEntity.ok().body(test);
 	}
 
