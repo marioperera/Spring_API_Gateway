@@ -7,11 +7,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterApiComponent } from './register-api/register-api.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterApiComponent
+    RegisterApiComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +26,7 @@ import { RegisterApiComponent } from './register-api/register-api.component';
     MatIconModule,
     MatCardModule,
     MatRadioModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
