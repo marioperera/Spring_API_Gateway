@@ -197,7 +197,8 @@ public class Index {
 
         Responsebean resp =new Responsebean();
         HashMap<String,String> respmap =new HashMap<String, String>();
-        respmap.put("name1","hello");
+        respmap.put("name1","hello /test");
+        respmap.put("name2","hello2 /test");
         resp.setValue(respmap);
         return resp;
     }
@@ -208,7 +209,8 @@ public class Index {
         System.out.println(requestBody.keySet());
         Responsebean resp =new Responsebean();
         HashMap<String,String> respmap =new HashMap<String, String>();
-        respmap.put("name1","hello from test2");
+        respmap.put("name3","hello from test2");
+        respmap.put("name4","hello /test2");
         resp.setValue(respmap);
         return resp;
     }
