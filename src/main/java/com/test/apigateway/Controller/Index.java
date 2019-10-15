@@ -28,6 +28,7 @@ import java.util.*;
  * @author mario_p
  * @Date 10/4/2019
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class Index {

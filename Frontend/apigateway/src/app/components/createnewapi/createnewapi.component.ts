@@ -51,11 +51,17 @@ export class CreatenewapiComponent implements OnInit {
     request_obj["call_list"] =JSON.parse(retrievedObject);
     console.log(JSON.stringify(request_obj));
     this.geturlservice.generatenewAPI(request_obj).subscribe(res =>{
-      if(res.code=="error"){
-        this.register_error =true;
-      }else{
-        this.register_error =false;
+      try{
+        if(res.code=="error"){
+          this.register_error =true;
+        }else{
+          this.register_error =false;
+        }
       }
+      catch(error){
+        
+      }
+      
       
     });
     
