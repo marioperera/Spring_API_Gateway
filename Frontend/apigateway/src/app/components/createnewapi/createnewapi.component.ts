@@ -13,6 +13,7 @@ export class CreatenewapiComponent implements OnInit {
   server_URL ="http://localhost:4001/query/";
   email = new FormControl('', [Validators.required]);
   request_type ="";
+  public register_error:boolean= false;
 
 
   constructor(private geturlservice:GetcurrentapisService) { }
@@ -40,6 +41,7 @@ export class CreatenewapiComponent implements OnInit {
   }
 
   registernewApi(){
+    this.register_error ==false;
     console.log("register new api called");
     let request_obj ={};
     request_obj["endpoint"] =this.server_URL+this.email.value;
@@ -49,7 +51,11 @@ export class CreatenewapiComponent implements OnInit {
     request_obj["call_list"] =JSON.parse(retrievedObject);
     console.log(JSON.stringify(request_obj));
     this.geturlservice.generatenewAPI(request_obj).subscribe(res =>{
-      console.log(res);
+      if(res.code=="error"){
+        this.register_error =true;
+      }else{
+        this.register_error =false;
+      }
       
     });
     
