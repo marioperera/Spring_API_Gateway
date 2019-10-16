@@ -98,11 +98,11 @@ public class Index {
 ////    }
 ////    }
 
+    //Add api's
     @PostMapping("/addApi")
     public  ResponseEntity<String> add(@RequestBody SaveNewApiBean saveNewApiBean){
-        System.out.println(saveNewApiBean.getEndpoint());
-        System.out.println(saveNewApiBean.getRequestparams());
         
+    	//Check api already registered or not
         SaveNewApiObj registeredApi = saveNewApiObjRepository.findByUrlAndType(saveNewApiBean.getEndpoint(), saveNewApiBean.getType());
         System.out.println("api " + registeredApi);
         if(registeredApi != null) {
