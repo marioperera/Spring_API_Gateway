@@ -32,6 +32,7 @@ public class GetUrlEndpointService {
 //        QueryEndpoint queryEndpoint =new QueryEndpoint();
 //        queryEndpoint.setEndpoint("http://localhost:4001/api/test");
 ////        queryEndpoint.setParameters(reqs);
+//        queryEndpoint.setType("POST");
 //        ArrayList<ResponseAttribute> respattribs =new ArrayList();
 //        respattribs.add(new ResponseAttribute("name1"));
 //        queryEndpoint.setResponse_attribs(respattribs);
@@ -40,6 +41,7 @@ public class GetUrlEndpointService {
 //        QueryEndpoint queryEndpoint2 =new QueryEndpoint();
 //        queryEndpoint2.setEndpoint("http://localhost:4001/api/test2");
 ////        queryEndpoint2.setParameters(reqs);
+//        queryEndpoint2.setType("POST");
 //        queryEndpoint2.setResponse_attribs(respattribs);
 //
 //        endpoints.add(queryEndpoint);
@@ -52,10 +54,13 @@ public class GetUrlEndpointService {
 //             ) {
 //            System.out.println("get url service line 44 "+ep.getEndpoint());
 //        }
+//        return endpoints;
+        System.out.println("http://localhost:4001"+endpoint);
         RegisterNewApiObject endpoints = registerNewApiObjectRepository
-                                        .getByNewEndpoint("http://localhost:4001/query/"+endpoint);
+                                        .getByNewEndpoint("http://localhost:4001"+endpoint);
 
         return endpoints.getQueryEndpoints();
+
     }
 
 }

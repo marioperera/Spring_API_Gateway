@@ -20,7 +20,7 @@ public class RegisterNewApiObject {
     @Column(name = "REQUEST_TYPE")
     private String type;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<QueryEndpoint> queryEndpoints;
 
     public int getId() {

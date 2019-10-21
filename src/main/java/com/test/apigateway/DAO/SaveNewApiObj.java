@@ -1,5 +1,7 @@
 package com.test.apigateway.DAO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class SaveNewApiObj {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Parameter> parameters;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<ResponseAttribute> responseAttributes;
 

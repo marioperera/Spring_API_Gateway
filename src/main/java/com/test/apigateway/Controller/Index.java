@@ -86,17 +86,17 @@ public class Index {
     }
 
 //    /addApi request model
-////    {"endpoint":"TEST",
-////            "type":"POST",
-////            "requestparams":{
-////        "test1":"string",
-////                "test1":"string"
-////    },
-////        "responseparams":{
-////        "test2":"string",
-////                "test1":"string"
-////    }
-////    }
+//    {"endpoint":"TEST",
+//            "type":"POST",
+//            "requestparams":{
+//        "test1":"string",
+//                "test1":"string"
+//    },
+//        "responseparams":{
+//        "test2":"string",
+//                "test1":"string"
+//    }
+//    }
 
     //Add api's
     @PostMapping("/addApi")
@@ -106,10 +106,10 @@ public class Index {
         SaveNewApiObj registeredApi = saveNewApiObjRepository.findByUrlAndType(saveNewApiBean.getEndpoint(), saveNewApiBean.getType());
         System.out.println("api " + registeredApi);
         if(registeredApi != null) {
-        	return ResponseEntity.ok().body("Already regitered url");
+        	return ResponseEntity.ok().body("Already registered url");
         }
         else {
-        	
+            System.out.println(saveNewApiBean.getRequestValues());
         	List<Parameter> requestParams = genrateListService.convertSetToListparameterWithType(saveNewApiBean.getRequestparams());
             
         	int status = registerVerifyService.validateApi(saveNewApiBean.getEndpoint(), saveNewApiBean.getType(), requestParams, saveNewApiBean.getRequestValues());
@@ -213,6 +213,22 @@ public class Index {
         respmap.put("name4","hello /test2");
         resp.setValue(respmap);
         return resp;
+    }
+
+    @GetMapping("/test3")
+    public Responsebean test3(@RequestParam String name2 ,@RequestParam String name1){
+        HashMap<String,String> resp = new HashMap<>();
+        Responsebean responsebean =new Responsebean();
+        if(name1!=null){
+            System.out.println("got path variable one "+name1);
+            resp.put("output5","value from pathvariable 1");
+        }
+        if(name2!=null){
+            System.out.println("got path variable two "+name2);
+            resp.put("output6","value from pathvariable 2");
+        }
+        responsebean.setValue(resp);
+        return responsebean;
     }
 
     public Field GetAttributeValue(Object o, String FiledName) throws NullPointerException{

@@ -1,8 +1,10 @@
 package com.test.apigateway.Services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.apigateway.DAO.QueryEndpoint;
 import com.test.apigateway.DAO.ResponseAttribute;
 import com.test.apigateway.Beans.Responsebean;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,16 +34,37 @@ public class CommonService {
             Responsebean response =new Responsebean();
 //            System.out.println("endpoint type is "+endpoint.getType());
 
-//          request will be send according to its request type
+//            this.GeneratenewGeturl(url,req_object);
+//          request will be sent according to its request type
 
             if(endpoint.getType().equals("POST")){
-                response = restTemplate.postForObject(url,req_object,Responsebean.class);
+                try{
+                    System.out.println("post request called");
+                    System.out.println(url);
+                    response = restTemplate.postForObject(url,req_object,Responsebean.class);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }else {
-                response = restTemplate.getForObject(url,Responsebean.class);
+                String url_new =this.GeneratenewGeturl(url,req_object);
+                try {
+
+                    response = restTemplate.getForObject(url_new,Responsebean.class);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
 
+            LinkedHashMap<String,String> responsemap = new LinkedHashMap<String, String>();
+            try{
+                responsemap =(LinkedHashMap<String, String>) response.getValue();
 
-            LinkedHashMap<String,String> responsemap =(LinkedHashMap<String, String>) response.getValue();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 //          uncomment for chaining requests
 //            request =new HashMap();
             try {
@@ -90,6 +113,18 @@ public class CommonService {
             }
         }
         return null;
+    }
+
+    public String GeneratenewGeturl(String url,HashMap<String,String> requestmap){
+        StringBuilder sb =new StringBuilder(url+"?");
+        requestmap.forEach((k,v)->sb.append(k+"="+v+"&"));
+        int index =sb.lastIndexOf("&");
+        sb.deleteCharAt(index);
+        System.out.println("from common service");
+        System.out.println(sb.toString());
+
+
+        return sb.toString();
     }
 
 }

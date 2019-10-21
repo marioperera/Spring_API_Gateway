@@ -25,7 +25,8 @@ public class QueryEndpoint {
 //    @OneToMany
     private List<Parameter> parameters;
 
-    @OneToMany(cascade = CascadeType.ALL)
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ResponseAttribute> response_attribs;
 
     public QueryEndpoint() {

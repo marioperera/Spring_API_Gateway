@@ -1,10 +1,12 @@
 package com.test.apigateway.Beans;
 
+import java.io.Serializable;
+
 /**
  * @author mario_p
  * @Date 10/4/2019
  */
-public class Responsebean {
+public class Responsebean implements Serializable {
     Object value;
     String code;
     String status;

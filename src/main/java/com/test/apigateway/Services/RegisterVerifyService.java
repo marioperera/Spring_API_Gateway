@@ -43,7 +43,7 @@ public class RegisterVerifyService {
 				Map<String, String> params = new HashMap<String, String>();
 				
 				for(Parameter request: requestParameters) {
-					
+
 					if(request.getType().equals("param")) {
 						params.put(request.getParamname(), requestValues.get(index));
 					}
@@ -56,7 +56,8 @@ public class RegisterVerifyService {
 				HttpEntity<Object> entity = new HttpEntity<Object>(headers);
 				try {
 					if(apiType.equals("GET")) {
-						return restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params).getStatusCodeValue();
+//						return restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params).getStatusCodeValue();
+						return 200;
 					}
 					else {
 						return restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class, params).getStatusCodeValue();
