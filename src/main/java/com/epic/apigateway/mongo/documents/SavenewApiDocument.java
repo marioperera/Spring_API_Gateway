@@ -1,5 +1,6 @@
 package com.epic.apigateway.mongo.documents;
 import com.epic.apigateway.dao.Parameter;
+import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.ResponseAttribute;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,23 +20,18 @@ public class SavenewApiDocument {
 
     private String type;
 
-    private List<Parameter> parameters;
+    private List<QueryEndpoint> endpoints;
 
 
-    private List<ResponseAttribute> responseAttributes;
+    public SavenewApiDocument() {
+    }
 
-
-//    public SavenewApiDocument(){
-//
-//    }
-//
-//    public SavenewApiDocument(String id, String url, String type, List<Parameter> parameters, List<ResponseAttribute> responseAttributes) {
-//        this.id = id;
-//        this.url = url;
-//        this.type = type;
-//        this.parameters = parameters;
-//        this.responseAttributes = responseAttributes;
-//    }
+    public SavenewApiDocument(String id, String url, String type, List<QueryEndpoint> endpoints) {
+        this.id = id;
+        this.url = url;
+        this.type = type;
+        this.endpoints = endpoints;
+    }
 
     public String getId() {
         return id;
@@ -61,19 +57,12 @@ public class SavenewApiDocument {
         this.type = type;
     }
 
-    public List<Parameter> getParameters() {
-        return parameters;
+    public List<QueryEndpoint> getEndpoints() {
+        return endpoints;
     }
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
+    public void setEndpoints(List<QueryEndpoint> endpoints) {
+        this.endpoints = endpoints;
     }
 
-    public List<ResponseAttribute> getResponseAttributes() {
-        return responseAttributes;
-    }
-
-    public void setResponseAttributes(List<ResponseAttribute> responseAttributes) {
-        this.responseAttributes = responseAttributes;
-    }
 }

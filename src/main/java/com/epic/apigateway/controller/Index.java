@@ -1,6 +1,8 @@
 package com.epic.apigateway.controller;
 
 import com.epic.apigateway.dao.*;
+import com.epic.apigateway.mongo.documents.SavenewApiDocument;
+import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
 import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
 import com.epic.apigateway.repositories.SaveNewApiObjRepository;
 import com.epic.apigateway.beans.RegisterApiTemplateBean;
@@ -43,6 +45,9 @@ public class Index {
     
     @Autowired
     RegisterVerifyService registerVerifyService;
+
+    @Autowired
+    ApiDocumentRepository apiDocumentRepository;
 
     @Autowired
     CommonService commonService;
@@ -175,6 +180,11 @@ public class Index {
         try{
             responsebean.setCode("ok");
             responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+            SavenewApiDocument savenewApiDocument =new SavenewApiDocument();
+            savenewApiDocument.setEndpoints(registerNewApiObject.getQueryEndpoints());
+            savenewApiDocument.setType(registerNewApiObject.getType());
+            savenewApiDocument.setUrl(registerNewApiObject.getNewEndpoint());
+            apiDocumentRepository.save(savenewApiDocument);
 
         }catch (Exception e){
             responsebean.setCode("error");
