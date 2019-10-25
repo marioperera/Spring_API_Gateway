@@ -1,6 +1,8 @@
 package com.epic.apigateway.services;
 
 //import com.sun.jndi.toolkit.url.Uri;
+import com.epic.apigateway.dao.QueryEndpoint;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import sun.nio.cs.StandardCharsets;
@@ -13,6 +15,8 @@ import java.util.*;
 
 @Service
 public class PartitionUrlService {
+    @Autowired
+    CommonService commonService;
 
     @Autowired
     RegisterApiService registerApiService;
@@ -20,7 +24,10 @@ public class PartitionUrlService {
     @Autowired
     QueryApiService queryApiService;
 
-    public HashMap<String,String> captureGetParameters(String url, Map<String, String[]> urlparameters) throws Exception{
+    @Autowired
+    GetUrlEndpointService getUrlEndpointService;
+
+    public HashMap<String,String> captureGetParameters(String url, Map<String, String[]> urlparameters,HashMap<String,String> headers) throws Exception{
         HashMap<String,String> resmap =new HashMap<>();
         Map<String,String[]> requestmap =  urlparameters;
         System.out.println("came to partition url service");
@@ -45,8 +52,9 @@ public class PartitionUrlService {
                 registerApiService.registerapi();
 
             }else if(requestParameters[2].equals("query")){
-                queryApiService.queryapi(url,resmap);
+                return queryApiService.queryapi(url,resmap,headers);
             }
+
         }
 
 
@@ -54,7 +62,18 @@ public class PartitionUrlService {
     }
 
     public HashMap<String,String > capturePostParameters(String uri) throws Exception{
-//        todo
+
+        List<QueryEndpoint> registerNewApiObject;
+
+        try {
+            registerNewApiObject = (List<QueryEndpoint>) getUrlEndpointService.GetURL(uri);
+        }catch (HibernateException e){
+            e.printStackTrace();
+            throw new Exception("no such published api exists");
+        }
+        System.out.println(registerNewApiObject.size());
+//        return commonService.get_response((HashMap) queryobjects,registerNewApiObject);
+
         return null;
 
     }

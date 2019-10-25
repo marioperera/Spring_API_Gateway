@@ -1,5 +1,7 @@
 package com.epic.apigateway.services;
 
+import com.epic.apigateway.mongo.documents.SavenewApiDocument;
+import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
 import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.Parameter;
@@ -20,6 +22,8 @@ public class GetUrlEndpointService {
     @Autowired
     RegisterNewApiObjectRepository registerNewApiObjectRepository;
 
+    @Autowired
+    ApiDocumentRepository apiDocumentRepository;
 
     public List<QueryEndpoint> GetURL(String endpoint) throws Exception{
         List<Parameter> reqs =new ArrayList<Parameter>();
@@ -55,10 +59,10 @@ public class GetUrlEndpointService {
 //        }
 //        return endpoints;
         System.out.println("http://localhost:4001"+endpoint);
-        RegisterNewApiObject endpoints = registerNewApiObjectRepository
-                                        .getByNewEndpoint("http://localhost:4001"+endpoint);
+        SavenewApiDocument endpoints = apiDocumentRepository
+                                        .getDistinctByUrl("http://localhost:4001"+endpoint);
 
-        return endpoints.getQueryEndpoints();
+        return endpoints.getEndpoints();
 
     }
 

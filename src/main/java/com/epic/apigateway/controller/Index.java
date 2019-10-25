@@ -21,6 +21,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -52,15 +53,15 @@ public class Index {
     @Autowired
     CommonService commonService;
 
-    @CrossOrigin("*")
-    @GetMapping("/query/{endpoint}")
-    public RequestEntity<Object> resolve(@PathVariable String endpoint, RequestEntity<Object> req_object){
-       return null;
-
-    }
+//    @CrossOrigin("*")
+//    @GetMapping("/query/{endpoint}")
+//    public RequestEntity<Object> resolve(@PathVariable String endpoint, RequestEntity<Object> req_object){
+//       return null;
+//
+//    }
     @CrossOrigin("*")
     @PostMapping("/query/{endpoint}")
-    public ResponseEntity<Responsebean> resolve(@RequestBody HashMap<String,String> req_object,@PathVariable String endpoint){
+    public ResponseEntity<Responsebean> resolve(HttpServletRequest request, @RequestBody HashMap<String,String> req_object, @PathVariable String endpoint){
 
         System.out.println("index controller line 52 "+req_object.keySet());
         ResponseEntity responseEntity;
@@ -73,7 +74,7 @@ public class Index {
 //                 ) {
 //                System.out.println(queryEndpoint.getEndpoint());
 //            }
-            resp.setValue(commonService.get_response(req_object,endpoints));
+//            resp.setValue(commonService.get_response(req_object,endpoints));
 
             responseEntity =new ResponseEntity(resp,HttpStatus.OK);
             return responseEntity;
@@ -179,18 +180,23 @@ public class Index {
         Responsebean responsebean =new Responsebean();
         try{
             responsebean.setCode("ok");
-            responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+//            responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
             SavenewApiDocument savenewApiDocument =new SavenewApiDocument();
             savenewApiDocument.setEndpoints(registerNewApiObject.getQueryEndpoints());
             savenewApiDocument.setType(registerNewApiObject.getType());
             savenewApiDocument.setUrl(registerNewApiObject.getNewEndpoint());
-            apiDocumentRepository.save(savenewApiDocument);
+            SavenewApiDocument endpoints = apiDocumentRepository
+                    .getDistinctByUrl(registerNewApiObject.getNewEndpoint());
+            if(endpoints==null){
+                apiDocumentRepository.save(savenewApiDocument);
+            }
+
 
         }catch (Exception e){
             responsebean.setCode("error");
             responsebean.setValue(e.toString());
         }
-
+        responsebean.setValue("ok");
         return responsebean;
 
 
@@ -198,9 +204,9 @@ public class Index {
 
     @PostMapping("/test")
     public Responsebean test(@RequestBody HashMap<String,String> requestBody ){
-        System.out.println("test route called --> index controller line 74 ");
-
-        System.out.println("index controller line 77 "+requestBody.keySet());
+//        System.out.println("test route called --> index controller line 74 ");
+//
+//        System.out.println("index controller line 77 "+requestBody.keySet());
 
 
         Responsebean resp =new Responsebean();
@@ -213,8 +219,8 @@ public class Index {
 
     @PostMapping("/test1")
     public Responsebean test2(@RequestBody HashMap<String,String> requestBody){
-        System.out.println("test route called --> index controller line 84 ");
-        System.out.println(requestBody.keySet());
+//        System.out.println("test route called --> index controller line 84 ");
+//        System.out.println(requestBody.keySet());
         Responsebean resp =new Responsebean();
         HashMap<String,String> respmap =new HashMap<String, String>();
         respmap.put("name3","hello from test2");
