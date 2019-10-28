@@ -30,7 +30,6 @@ public class SaveNewApiObj {
     @OneToMany(cascade = CascadeType.ALL)
     private List<com.epic.apigateway.dao.Parameter> parameters;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<ResponseAttribute> responseAttributes;
 

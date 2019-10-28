@@ -10,7 +10,7 @@ import {GetcurrentapisService} from '../../services/getcurrentapis.service';
 })
 export class CreatenewapiComponent implements OnInit {
   
-  server_URL ="http://localhost:4001/query/";
+  server_URL ="http://localhost:4001/api/query/";
   email = new FormControl('', [Validators.required]);
   request_type ="";
   public register_error:boolean= false;

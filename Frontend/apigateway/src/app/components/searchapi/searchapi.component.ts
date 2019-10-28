@@ -12,9 +12,10 @@ export class SearchapiComponent implements OnInit {
   public ischecked:boolean = false;
   public URL_list:any[] =new Array();
   public attributes:any[];
- 
+  public mapping:String;
   public call_list:any ={};
   public id_list:any[] =new Array();
+  public mappings ={};
 
   constructor(private geturlservice:GetcurrentapisService) { }
 
@@ -45,6 +46,13 @@ export class SearchapiComponent implements OnInit {
     
   }
 
+  public addmapping(attribute){
+    console.log(this.mapping,attribute);
+    this.mapping ="";
+    this.mappings[attribute] =this.mapping;
+    
+  }
+
   public addtoUrlList(item){
     // console.log("log to console called");
     // console.log(item);
@@ -58,15 +66,21 @@ export class SearchapiComponent implements OnInit {
       }
     });
     // console.log(this.attributes);
-    
+    let apiurlobject ={};
+    apiurlobject["response_attribs"] =this.attributes;
+    apiurlobject["mappings"] =this.mappings;
     var id:number =item.id;
     console.log(item.id);
-    this.call_list[id] =this.attributes;
+    this.mappings = {};
+    
+
+    this.call_list[id] =apiurlobject;
     
 
     
     console.log(this.call_list);
     localStorage.setItem("call_list",JSON.stringify(this.call_list));
+    
     
     
   }

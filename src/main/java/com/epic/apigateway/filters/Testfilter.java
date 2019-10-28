@@ -75,7 +75,12 @@ public class Testfilter extends OncePerRequestFilter {
                 }
             }
         }
-        filterChain.doFilter(httpServletRequest,httpServletResponse);
+        try{
+            filterChain.doFilter(httpServletRequest,httpServletResponse);
+        }catch (Exception eee){
+            eee.addSuppressed(new Exception("stream exeception"));
+        }
+
     }
 
 

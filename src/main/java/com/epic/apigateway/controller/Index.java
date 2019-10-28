@@ -135,20 +135,35 @@ public class Index {
         }
     }
 
+
+
 //    json Object model for reference
 //{
-//    "endpoint": "http://localhost:4001/query/test",
-//        "type": "POST",
+//    "endpoint": "http://localhost:4001/api/query/xxx",
+//        "type": "GET",
 //        "call_list": {
-//    "1": [
-//    "name2",
-//            "name1"
-//    ],
-//    "6": [
-//    "name2"
-//    ]
+//    "1": {
+//        "response_attribs": [
+//        "name2",
+//                "output5"
+//            ],
+//        "mappings": {
+//            "name2": "%$!!!!name",
+//                    "output5": "%$output5"
+//        }
+//    },
+//    "6":  {
+//        "response_attribs": [
+//        "name2","output5"
+//            ],
+//        "mappings": {
+//            "name2": "%$name",
+//                    "output5": "%$!!!output5"
+//        }
+//    }
 //}
 //}
+
     @CrossOrigin("*")
     @PostMapping("/register")
     public Responsebean register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
