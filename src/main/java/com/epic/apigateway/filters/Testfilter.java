@@ -75,9 +75,7 @@ public class Testfilter extends OncePerRequestFilter {
                 }
             }
         }
-        else{
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
-        }
+        filterChain.doFilter(httpServletRequest,httpServletResponse);
     }
 
 

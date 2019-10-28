@@ -99,7 +99,7 @@ public class CommonService {
 //                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
                         if(field!=null){
 
-                            request.put(val.getAttribute(),responsemap.get(val.getAttribute()));
+                            request.put(endpoint.getMappings().get(val.getAttribute()),responsemap.get(val.getAttribute()));
                             System.out.println("line 81"+request);
 
 

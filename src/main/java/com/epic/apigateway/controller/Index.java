@@ -1,5 +1,6 @@
 package com.epic.apigateway.controller;
 
+import com.epic.apigateway.beans.CallListElement;
 import com.epic.apigateway.dao.*;
 import com.epic.apigateway.mongo.documents.SavenewApiDocument;
 import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
@@ -53,12 +54,12 @@ public class Index {
     @Autowired
     CommonService commonService;
 
-//    @CrossOrigin("*")
-//    @GetMapping("/query/{endpoint}")
-//    public RequestEntity<Object> resolve(@PathVariable String endpoint, RequestEntity<Object> req_object){
-//       return null;
-//
-//    }
+    @CrossOrigin("*")
+    @GetMapping("/query/{endpoint}")
+    public RequestEntity<Object> resolve(@PathVariable String endpoint, RequestEntity<Object> req_object){
+       return null;
+
+    }
     @CrossOrigin("*")
     @PostMapping("/query/{endpoint}")
     public ResponseEntity<Responsebean> resolve(HttpServletRequest request, @RequestBody HashMap<String,String> req_object, @PathVariable String endpoint){
@@ -151,8 +152,8 @@ public class Index {
     @CrossOrigin("*")
     @PostMapping("/register")
     public Responsebean register(@RequestBody RegisterApiTemplateBean registerApiTemplateBean){
-//        System.out.println("logging from index controller /register line 71");
-//        System.out.println(registerApiTemplateBean.getCall_list().get("1").get("1"));
+        System.out.println("logging from index controller /register line 71");
+        System.out.println(registerApiTemplateBean.getCall_list().get("1"));
 //        System.out.println(registerApiTemplateBean.getCall_list());
         RegisterNewApiObject registerNewApiObject =new RegisterNewApiObject();
         registerNewApiObject.setNewEndpoint(registerApiTemplateBean.getEndpoint());
@@ -168,10 +169,13 @@ public class Index {
             queryEndpoint.setParameters(saveNewApiObj.getParameters());
             queryEndpoint.setType(saveNewApiObj.getType());
             List<ResponseAttribute> required_responses =new ArrayList<>();
-            for (String key:registerApiTemplateBean.getCall_list().get(id)
-                 ) {
-                required_responses.add(new ResponseAttribute(key));
-            }
+//            todo : generate new code for mappings attribute
+            Arrays.stream(registerApiTemplateBean.getCall_list().get(id).getResponse_attribs()).forEach(s ->{
+                required_responses.add(new ResponseAttribute(s));
+            });
+            HashMap<String,String > user_request_mappings =registerApiTemplateBean.getCall_list().get(id).getMappings();
+            queryEndpoint.setMappings(user_request_mappings);
+            System.out.println("user_request mappings"+user_request_mappings);
             queryEndpoint.setResponse_attribs(required_responses);
             queryobjects.add(queryEndpoint);
         }

@@ -1,6 +1,7 @@
 package com.epic.apigateway.dao;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,9 +26,20 @@ public class QueryEndpoint {
 //    @OneToMany
     private List<Parameter> parameters;
 
+    @Transient
+    private HashMap<String,String> mappings;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ResponseAttribute> response_attribs;
+
+    public HashMap<String, String> getMappings() {
+        return mappings;
+    }
+
+    public void setMappings(HashMap<String, String> mappings) {
+        this.mappings = mappings;
+    }
 
     public QueryEndpoint() {
     }

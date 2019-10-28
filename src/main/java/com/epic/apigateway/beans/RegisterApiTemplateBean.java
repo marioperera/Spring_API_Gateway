@@ -1,6 +1,8 @@
 package com.epic.apigateway.beans;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author mario_p
@@ -10,13 +12,19 @@ public class RegisterApiTemplateBean {
     String endpoint;
     String type;
 //    HashMap<Integer ,HashMap<QueryEndpoint,String[]>> call_list;
-    HashMap<String ,String[]> call_list;
+    LinkedHashMap<String , CallListElement> call_list;
 
-    public HashMap<String, String[]> getCall_list() {
+    public RegisterApiTemplateBean(String endpoint, String type, LinkedHashMap<String, CallListElement> call_list) {
+        this.endpoint = endpoint;
+        this.type = type;
+        this.call_list = call_list;
+    }
+
+    public LinkedHashMap<String, CallListElement> getCall_list() {
         return call_list;
     }
 
-    public void setCall_list(HashMap<String, String[]> call_list) {
+    public void setCall_list(LinkedHashMap<String, CallListElement> call_list) {
         this.call_list = call_list;
     }
 
