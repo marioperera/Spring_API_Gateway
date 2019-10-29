@@ -22,13 +22,15 @@ public class QueryApiService {
         Logger.getAnonymousLogger().warning("Api Query");
         List<QueryEndpoint> registerNewApiObject;
 
+//        check wither the api is registerd with the database
+
         try {
             registerNewApiObject = (List<QueryEndpoint>) getUrlEndpointService.GetURL(url);
         }catch (HibernateException e){
             e.printStackTrace();
             throw new Exception("no such published api exists");
         }
-        System.out.println(registerNewApiObject.size());
+
         return commonService.get_response((HashMap) queryobjects,registerNewApiObject,headers);
 
 

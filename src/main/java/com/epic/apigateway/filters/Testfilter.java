@@ -29,8 +29,8 @@ public class Testfilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal( HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException, IOException, ServletException {
-//        System.out.println("yooooooooooooooooooooooo");
-//        System.out.println(httpServletRequest.getMethod());
+
+
         if(httpServletRequest.getRequestURI().contains("/h2-console/")){
             filterChain.doFilter(httpServletRequest,httpServletResponse);
 
@@ -47,7 +47,8 @@ public class Testfilter extends OncePerRequestFilter {
 
         HashMap<String,String> resultmap =new HashMap<>();
 
-        if(httpServletRequest.getRequestURI().contains("query")){
+        if(httpServletRequest.getRequestURI().contains("api/query")){
+//            check wether the request method is GET or POST
             if(httpServletRequest.getMethod().equals("POST")){
                 try {
                     partitionUrlService.capturePostParameters(httpServletRequest.getRequestURI());
@@ -58,13 +59,16 @@ public class Testfilter extends OncePerRequestFilter {
                 try {
                     HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
                     resultmap =partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
+//                    removing variables with null values
+//                    resultmap.remove(null);
+                    System.out.println(resultmap);
+//                    object to String mapper initialization
                     httpServletResponse.setContentType("Application/Json");
                     ObjectMapper mapper = new ObjectMapper();
                     String json = "";
                     try {
                         json = mapper.writeValueAsString(resultmap);
-//                        System.out.println("ResultingJSONstring = " + json);
-                        //System.out.println(json);
+
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
@@ -74,17 +78,15 @@ public class Testfilter extends OncePerRequestFilter {
                     e.printStackTrace();
                 }
             }
+
         }
         try{
             filterChain.doFilter(httpServletRequest,httpServletResponse);
-        }catch (Exception eee){
-            eee.addSuppressed(new Exception("stream exeception"));
+        }catch (Exception ignored){
+
         }
 
     }
 
 
-
-
-    // ..........
 }

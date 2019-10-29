@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
+import { response } from 'src/app/Models/response';
 
 
 @Component({
@@ -50,7 +51,7 @@ export class CreatenewapiComponent implements OnInit {
     console.log('retrievedObject: ', JSON.parse(retrievedObject));
     request_obj["call_list"] =JSON.parse(retrievedObject);
     console.log(JSON.stringify(request_obj));
-    this.geturlservice.generatenewAPI(request_obj).subscribe(res =>{
+    this.geturlservice.generatenewAPI(request_obj).subscribe((res:response) =>{
       try{
         if(res.code=="error"){
           this.register_error =true;

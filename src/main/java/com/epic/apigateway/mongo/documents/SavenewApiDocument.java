@@ -3,6 +3,7 @@ import com.epic.apigateway.dao.Parameter;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.ResponseAttribute;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ public class SavenewApiDocument {
 
     @Id
     private String id;
-
+    @Indexed(unique = true)
     private String url;
 
     private String type;

@@ -13,14 +13,14 @@
         <div>
             {{item.url}}
             <br>
-
-
+           
+<!-- cutom attribute silector -->
             <b>attributes :</b>
             <br>
             <div *ngFor="let attrb of item.responseAttributes">
                 <mat-checkbox style="padding: 10px;"  (click) ="changeidtominus(item,attrb)" style="font-family: 'Courier New', Courier, monospace; margin-top: 30px;">{{attrb.attribute}} </mat-checkbox>
                 <a style="margin-bottom: 20px; align-content: center;padding: 5px; font-family: 'Courier New', Courier, monospace;" >   mapping : 
-                    <input [(ngModel)]="mapping" type="text" style="border-radius: 5%;"> 
+                    <input value ="" id="mappings-{{attrb.attribute}}"  type="text" style="border-radius: 5%;"> 
                     <button (click)="addmapping(attrb.attribute)" class="sm-btn btn-dark" style="padding-left: 10px; margin-left: 10px;">Submit</button>
                 </a>
                 
@@ -28,10 +28,9 @@
             </div>
             <div class="">
                 <br>
-                <button type="button" (click)="addtoUrlList(item)" class="btn btn-primary">get from request</button>
+                <button type="button" (click)="addtoUrlList(item)" class="btn btn-primary">Add to Api List</button>
             </div>
-            
-            
+         
         </div>
     </mat-card>
 

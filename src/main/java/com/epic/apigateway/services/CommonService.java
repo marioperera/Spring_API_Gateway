@@ -44,9 +44,6 @@ public class CommonService {
             Responsebean response =new Responsebean();
 //            System.out.println("endpoint type is "+endpoint.getType());
 
-//            this.GeneratenewGeturl(url,req_object);
-//          request will be sent according to its request type
-
             if(endpoint.getType().equals("POST")){
                 try{
                     System.out.println("post request called");

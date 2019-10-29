@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
+import { myElement } from 'src/app/Models/myElement';
 
 @Component({
   selector: 'app-searchapi',
@@ -12,12 +13,14 @@ export class SearchapiComponent implements OnInit {
   public ischecked:boolean = false;
   public URL_list:any[] =new Array();
   public attributes:any[];
-  public mapping:String;
+  public mapping:String="";
   public call_list:any ={};
   public id_list:any[] =new Array();
   public mappings ={};
 
   constructor(private geturlservice:GetcurrentapisService) { }
+
+  @ViewChildren('mapping') someDivs;
 
   ngOnInit() {
     console.log(this.ischecked);
@@ -30,6 +33,13 @@ export class SearchapiComponent implements OnInit {
     });
     
   }
+
+  ngAfterViewInit(){
+
+  }
+
+ 
+
   email = new FormControl('', [Validators.required]);
 
   getErrorMessage() {
@@ -46,10 +56,25 @@ export class SearchapiComponent implements OnInit {
     
   }
 
+  public registervalues(attribute){
+    console.log(attribute);
+    
+    // var myElement = document.getElementById( 'mapping-'+event );
+    // console.log(myElement.nodeValue.toString);
+    
+    
+  }
+
+
+
   public addmapping(attribute){
+    console.log('mappings-'+attribute);    
+    var myElement:myElement = (<HTMLInputElement>document.getElementById('mappings-'+attribute));
+    console.log(myElement.value);
+    this.mapping =myElement.value;
     console.log(this.mapping,attribute);
-    this.mapping ="";
     this.mappings[attribute] =this.mapping;
+    this.mapping ="";
     
   }
 

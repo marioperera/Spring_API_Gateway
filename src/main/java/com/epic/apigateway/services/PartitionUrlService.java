@@ -1,6 +1,5 @@
 package com.epic.apigateway.services;
 
-//import com.sun.jndi.toolkit.url.Uri;
 import com.epic.apigateway.dao.QueryEndpoint;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ public class PartitionUrlService {
         Map<String,String[]> requestmap =  urlparameters;
         System.out.println("came to partition url service");
 
+//        map the original URL query parameters to a Hashmap
+
         urlparameters.forEach(
                 (k,v)->
                         Arrays.stream(v).forEach(
@@ -41,6 +42,8 @@ public class PartitionUrlService {
 
 
         URI uri =new URI(url);
+
+//        break the current url by the  "/" for finding path variables
 
         String[] requestParameters = url.split("/");
         System.out.println(uri);
