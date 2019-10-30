@@ -42,10 +42,6 @@ public class Testfilter extends OncePerRequestFilter {
     protected void doFilterInternal( HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException, IOException, ServletException {
 
 
-//        if(httpServletRequest.getRequestURI().contains("/h2-console/")){
-//            filterChain.doFilter(httpServletRequest,httpServletResponse);
-//
-//        }
     	System.out.println("This is from fliter");
         if(httpServletRequest.getRequestURI().contains("api/addApi")){
             filterChain.doFilter(httpServletRequest,httpServletResponse);
