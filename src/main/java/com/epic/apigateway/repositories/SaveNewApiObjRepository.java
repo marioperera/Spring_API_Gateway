@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SaveNewApiObjRepository extends JpaRepository<SaveNewApiObj,Integer> {
 	
 	SaveNewApiObj findByUrlAndType(String url, String type);
+	SaveNewApiObj findByUrl(String url);
 }

@@ -290,5 +290,65 @@ public class Index {
 		System.out.println(test);
 		return ResponseEntity.ok().body(test);
 	}
+    
+    @CrossOrigin("*")
+    @PostMapping("/testRegister")
+    private Responsebean registerNewApi(@RequestBody RegisterApiTemplateBean registerApiTemplateBean ) {
+    	String endpoint = registerApiTemplateBean.getEndpoint();
+    	String type = registerApiTemplateBean.getType();
+    	HashMap<String,CallListElement> endpointList = registerApiTemplateBean.getCall_list();
+    	
+    	List<QueryEndpoint> queryEndpoints = new ArrayList<QueryEndpoint>();
+    	
+    	for(String key: endpointList.keySet()) {
+    		SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
+    		QueryEndpoint queryEndpoint = new QueryEndpoint();
+    		queryEndpoint.setEndpoint(key);
+    		queryEndpoint.setType(saveNewApiObj.getType());
+    		queryEndpoint.setParameters(saveNewApiObj.getParameters());
+    		
+    		String reponseAttributes[] = endpointList.get(key).getResponse_attribs();
+    		List<ResponseAttribute> responseList = new ArrayList<ResponseAttribute>();
+    		
+    		for(String reponseName: reponseAttributes) {
+    			ResponseAttribute responseAttribute = new ResponseAttribute();
+    			responseAttribute.setAttribute(reponseName);
+    			responseList.add(responseAttribute);
+    		}
+    		queryEndpoint.setResponse_attribs(responseList);
+    		queryEndpoints.add(queryEndpoint);
+    	}
+    	RegisterNewApiObject registerNewApiObject = new RegisterNewApiObject();
+    	registerNewApiObject.setNewEndpoint(endpoint);
+    	registerNewApiObject.setQueryEndpoints(queryEndpoints);
+    	registerNewApiObject.setType(type);
+    	
+    	Responsebean responsebean = new Responsebean();
+    	try {
+    		responsebean.setCode("ok");
+    		responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+    	}
+    	catch(Exception e) {
+			 responsebean.setCode("error");
+	         responsebean.setValue(e.toString());
+    	}
+    	return responsebean;
+    }
+    
+    @PostMapping("/hsTest3/{uid}")
+    private ResponseEntity<String> hsTest3(@PathVariable("uid") String uid, @RequestBody HashMap<String, String> requestBody){
+    	
+    	String bodyOutput = "";
+    	for(String key: requestBody.keySet()) {
+    		bodyOutput = bodyOutput +" "+ requestBody.get(key);
+    	}
+    	
+    	return ResponseEntity.ok().body(bodyOutput + " " + uid);
+    }
+    
+    @GetMapping("/testParam")
+    private ResponseEntity<String> testParameters(@RequestParam String queryId){
+    	return ResponseEntity.ok().body("this is id "+ queryId);
+    }
 
 }

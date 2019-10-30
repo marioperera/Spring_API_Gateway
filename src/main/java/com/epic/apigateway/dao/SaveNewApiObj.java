@@ -27,7 +27,8 @@ public class SaveNewApiObj {
     @Column(name = "REQUEST_TYPE")
     private String type;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    //fetch type
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<com.epic.apigateway.dao.Parameter> parameters;
 
     @OneToMany(cascade = CascadeType.ALL)

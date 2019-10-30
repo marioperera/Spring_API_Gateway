@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
-import { myElement } from 'src/app/Models/myElement';
+// import { myElement } from 'src/app/Models/myElement';
 
 @Component({
   selector: 'app-searchapi',
@@ -69,7 +69,7 @@ export class SearchapiComponent implements OnInit {
 
   public addmapping(attribute){
     console.log('mappings-'+attribute);    
-    var myElement:myElement = (<HTMLInputElement>document.getElementById('mappings-'+attribute));
+    var myElement = (<HTMLInputElement>document.getElementById('mappings-'+attribute));
     console.log(myElement.value);
     this.mapping =myElement.value;
     console.log(this.mapping,attribute);

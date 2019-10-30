@@ -16,6 +16,7 @@ import { CreatenewapiComponent } from './components/createnewapi/createnewapi.co
 import {MatCheckboxModule} from '@angular/material/checkbox'; 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { from } from 'rxjs';
+import { PostApiComponent } from './components/post-api/post-api.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { from } from 'rxjs';
     RegisterApiComponent,
     PublishNewApiComponent,
     SearchapiComponent,
-    CreatenewapiComponent
+    CreatenewapiComponent,
+    PostApiComponent
   ],
   imports: [
     FormsModule,
