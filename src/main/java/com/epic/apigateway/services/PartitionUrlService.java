@@ -52,10 +52,14 @@ public class PartitionUrlService {
         }else {
 
             if(requestParameters[2].equals("register")){
-                registerApiService.registerapi();
+//                registerApiService.registerapi();
 
             }else if(requestParameters[2].equals("query")){
-                return queryApiService.queryapi(url,resmap,headers);
+                try {
+                    return queryApiService.queryapi(url,resmap,headers);
+                } catch (Exception e) {
+                    throw e;
+                }
             }
 
         }
