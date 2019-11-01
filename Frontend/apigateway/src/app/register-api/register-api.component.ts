@@ -57,11 +57,17 @@ export class RegisterApiComponent implements OnInit {
       console.log("There is a path variable");
       for(let i=0; i<url.length-1; i++){
         if(url.indexOf('{')!=-1){
-          
-          this.pathVariables.push(url.substring(url.lastIndexOf('{')+1,url.lastIndexOf('}')));
 
-          url = url.substring(0,url.lastIndexOf("{"));
-          console.log(url);
+          if(!this.pathVariables.includes(url.substring(url.lastIndexOf('{')+1,url.lastIndexOf('}')))){
+            this.pathVariables.push(url.substring(url.lastIndexOf('{')+1,url.lastIndexOf('}')));
+            url = url.substring(0,url.lastIndexOf("{"));
+            console.log(url);
+          }
+          else{
+            this.pathVariables.splice(0,this.pathVariables.length);
+            Swal.fire('Oops...', 'Can\'t have path varibles same name..!!', 'error');
+            break;
+          }
         }
         else{
           break;
