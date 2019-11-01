@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.epic.apigateway.dao.Mapping;
 import com.epic.apigateway.dao.Parameter;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.RegisterNewApiObject;
@@ -66,180 +67,213 @@ public class TestService {
 		
 //		registerNewApi = registerNewApiObjectRepository.findByNewEndpoint(fullUrl);
 		registerNewApi = this.slovingPathVariblesList(fullUrl);
+		if(registerNewApi != null) {
 		
-		Map<String,String> pathVaribles = new HashMap<String, String>();
-		
-		if(registerNewApi.getNewEndpoint().indexOf("}")!=-1) {
-			pathVaribles = this.pathvaribleValue(fullUrl, registerNewApi.getNewEndpoint());
+			Map<String,String> pathVaribles = new HashMap<String, String>();
+			
+			if(registerNewApi.getNewEndpoint().indexOf("}")!=-1) {
+				pathVaribles = this.pathvaribleValue(fullUrl, registerNewApi.getNewEndpoint());
+			}
+//			else {
+//				pathVaribles = {};
+//			}
+			
+			List<QueryEndpoint> queryEndPoints =  registerNewApi.getQueryEndpoints();
+			List<Parameter> parameters = new ArrayList<Parameter>();
+			
+	//		RegisterNewApiObject registerNewApiTest = registerNewApiObjectRepository.findByLikeNewEndpoint(fullUrl);
+	//		System.out.println("this from test api : " + registerNewApiTest.getNewEndpoint());
+			RestTemplate restTemplate = new RestTemplate();
+			
+			int countOfParameter=0;
+			int fullheaderCount=0;
+			
+			for(QueryEndpoint endpoint: queryEndPoints) {
+				
+				System.out.println(endpoint.getEndpoint());
+				//System.out.println("This query endpoints mappings : "+endpoint.getMappings());
+				
+				//Testing 
+	//			for(Mapping map : endpoint.getMapping()) {
+	//				System.out.println("This is from parameters: " + map.getParamname());
+	//			}
+				
+				SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrl(endpoint.getEndpoint());
+				parameters = saveNewApi.getParameters();
+				
+				String endPointUrl = endpoint.getEndpoint();
+				
+				Map<String, String> params = new HashMap<String, String>();
+				
+				Map<String, String> bodyData = new HashMap<String, String>();
+				
+				HttpHeaders headers = new HttpHeaders();
+			    headers.setContentType(MediaType.APPLICATION_JSON);
+	
+				for(Parameter param: parameters) {
+					if(!requestBodyMap.isEmpty()) {
+						for(String key: requestBodyMap.keySet()) {
+							if(key.substring(1,key.length()-1).equals(param.getParamname())) {
+								String value = requestBodyMap.get(key);
+								
+								if(param.getType().equals("param")) {
+									params.put(param.getParamname(), value.substring(1,value.length()-1));
+									System.out.println("From url parameters : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
+								}
+								else if(param.getType().equals("body")) {
+									bodyData.put(param.getParamname(), value.substring(1,value.length()-1));
+									System.out.println("From body : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
+								}
+								else if(param.getType().equals("header")) {
+									headers.set(param.getParamname(), value.substring(1,value.length()-1));
+									System.out.println("From header : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
+									
+								}
+								else if(param.getType().equals("query")) {
+									if(endPointUrl.indexOf("?")==-1) {
+										endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value.substring(1,value.length()-1);
+									}
+									else {
+										endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value.substring(1,value.length()-1);
+									}
+									System.out.println("From body query : "+param.getParamname()+" : "+value);
+								}
+							}
+						}
+					}
+					if(!requestHeader.isEmpty()) {
+						for(String key: requestHeader.keySet()) {
+							if(key.equals(param.getParamname())) {
+								String value = requestHeader.get(key);
+								fullheaderCount++;
+								
+								if(param.getType().equals("param")) {
+									params.put(param.getParamname(), value);
+									System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("body")) {
+									bodyData.put(param.getParamname(), value);
+									System.out.println("From header body : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("header")) {
+									headers.set(param.getParamname(), value);
+									System.out.println("From header header : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("query")) {
+									if(endPointUrl.indexOf("?")==-1) {
+										endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
+									}
+									else {
+										endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
+									}
+									System.out.println("From header query : "+param.getParamname()+" : "+value);
+								}
+							}
+						}
+					}
+					if(!queryParameters.isEmpty()) {
+						for(String key: queryParameters.keySet()) {
+							if(key.equals(param.getParamname())) {
+								String value = queryParameters.get(key)[0];
+								
+								if(param.getType().equals("param")) {
+									params.put(param.getParamname(), value);
+									System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("body")) {
+									bodyData.put(param.getParamname(), value);
+									System.out.println("From header body : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("header")) {
+									headers.set(param.getParamname(), value);
+									System.out.println("From header header : "+param.getParamname()+" : "+value);
+									
+								}
+								else if(param.getType().equals("query")) {
+									if(endPointUrl.indexOf("?")==-1) {
+										endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
+									}
+									else {
+										endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
+									}
+									System.out.println("From header query : "+param.getParamname()+" : "+value);
+								}
+							}
+						}
+					}
+					if(pathVaribles != null || !pathVaribles.isEmpty()) {
+						for(String key: pathVaribles.keySet()) {
+							if(key.equals(param.getParamname())) {
+								String value = pathVaribles.get(key);
+								
+								if(param.getType().equals("param")) {
+									params.put(param.getParamname(), value);
+									System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("body")) {
+									bodyData.put(param.getParamname(), value);
+									System.out.println("From header body : "+param.getParamname()+" : "+value);
+								}
+								else if(param.getType().equals("header")) {
+									headers.set(param.getParamname(), value);
+									System.out.println("From header header : "+param.getParamname()+" : "+value);
+									
+								}
+								else if(param.getType().equals("query")) {
+									if(endPointUrl.indexOf("?")==-1) {
+										endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
+									}
+									else {
+										endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
+									}
+									System.out.println("From header query : "+param.getParamname()+" : "+value);
+								}
+							}
+						}
+					}
+				}
+				
+				countOfParameter = countOfParameter+ parameters.size();
+				
+				String typeOfEndpoint = saveNewApi.getType();
+				if(typeOfEndpoint.equals("GET")) {
+					HttpEntity<Object> entity = new HttpEntity<Object>(headers);
+					
+					try {
+						String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
+						fullResponse = fullResponse + " " +response+"\n";
+					}catch(Exception e) {
+						System.out.println("error : "+e);
+					}
+				}
+				else if(typeOfEndpoint.equals("POST")) {
+					HttpEntity<Object> entity = new HttpEntity<Object>(bodyData, headers);
+					
+					try {
+						String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
+						fullResponse = fullResponse + response +"\n";
+					}catch(Exception e) {
+						System.out.println("error : "+e);
+					}
+				}
+				
+			}
+			
+			int sizeOfRequestParameters = requestBodyMap.size() +queryParameters.size() + pathVaribles.size();
+			System.out.println("This is request parameter size "+ sizeOfRequestParameters);
+			
+			int exceptHeaderParameter = countOfParameter-fullheaderCount;
+			System.out.println("This is full parameter size: "+ exceptHeaderParameter);
+			if(sizeOfRequestParameters == exceptHeaderParameter) {
+				return fullResponse;
+			}
+			else {
+				return "400";
+			}
 		}
 		else {
-			pathVaribles = null;
+			return "500";
 		}
-		
-		List<QueryEndpoint> queryEndPoints =  registerNewApi.getQueryEndpoints();
-		List<Parameter> parameters = new ArrayList<Parameter>();
-		
-//		RegisterNewApiObject registerNewApiTest = registerNewApiObjectRepository.findByLikeNewEndpoint(fullUrl);
-//		System.out.println("this from test api : " + registerNewApiTest.getNewEndpoint());
-		RestTemplate restTemplate = new RestTemplate();
-		
-		for(QueryEndpoint endpoint: queryEndPoints) {
-			
-			System.out.println(endpoint.getEndpoint());
-			SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrl(endpoint.getEndpoint());
-			parameters = saveNewApi.getParameters();
-			
-			String endPointUrl = endpoint.getEndpoint();
-			
-			Map<String, String> params = new HashMap<String, String>();
-			
-			Map<String, String> bodyData = new HashMap<String, String>();
-			
-			HttpHeaders headers = new HttpHeaders();
-		    headers.setContentType(MediaType.APPLICATION_JSON);
-
-			for(Parameter param: parameters) {
-				if(!requestBodyMap.isEmpty()) {
-					for(String key: requestBodyMap.keySet()) {
-						if(key.substring(1,key.length()-1).equals(param.getParamname())) {
-							String value = requestBodyMap.get(key);
-							
-							if(param.getType().equals("param")) {
-								params.put(param.getParamname(), value.substring(1,value.length()-1));
-								System.out.println("From url parameters : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
-							}
-							else if(param.getType().equals("body")) {
-								bodyData.put(param.getParamname(), value.substring(1,value.length()-1));
-								System.out.println("From body : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
-							}
-							else if(param.getType().equals("header")) {
-								headers.set(param.getParamname(), value.substring(1,value.length()-1));
-								System.out.println("From header : "+param.getParamname()+" : "+value.substring(1,value.length()-1));
-							}
-							else if(param.getType().equals("query")) {
-								if(endPointUrl.indexOf("?")==-1) {
-									endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value.substring(1,value.length()-1);
-								}
-								else {
-									endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value.substring(1,value.length()-1);
-								}
-								System.out.println("From body query : "+param.getParamname()+" : "+value);
-							}
-						}
-					}
-				}
-				if(!requestHeader.isEmpty()) {
-					for(String key: requestHeader.keySet()) {
-						if(key.equals(param.getParamname())) {
-							String value = requestHeader.get(key);
-							
-							if(param.getType().equals("param")) {
-								params.put(param.getParamname(), value);
-								System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("body")) {
-								bodyData.put(param.getParamname(), value);
-								System.out.println("From header body : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("header")) {
-								headers.set(param.getParamname(), value);
-								System.out.println("From header header : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("query")) {
-								if(endPointUrl.indexOf("?")==-1) {
-									endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
-								}
-								else {
-									endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
-								}
-								System.out.println("From header query : "+param.getParamname()+" : "+value);
-							}
-						}
-					}
-				}
-				if(!queryParameters.isEmpty()) {
-					for(String key: queryParameters.keySet()) {
-						if(key.equals(param.getParamname())) {
-							String value = queryParameters.get(key)[0];
-							
-							if(param.getType().equals("param")) {
-								params.put(param.getParamname(), value);
-								System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("body")) {
-								bodyData.put(param.getParamname(), value);
-								System.out.println("From header body : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("header")) {
-								headers.set(param.getParamname(), value);
-								System.out.println("From header header : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("query")) {
-								if(endPointUrl.indexOf("?")==-1) {
-									endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
-								}
-								else {
-									endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
-								}
-								System.out.println("From header query : "+param.getParamname()+" : "+value);
-							}
-						}
-					}
-				}
-				if(pathVaribles != null) {
-					for(String key: pathVaribles.keySet()) {
-						if(key.equals(param.getParamname())) {
-							String value = pathVaribles.get(key);
-							
-							if(param.getType().equals("param")) {
-								params.put(param.getParamname(), value);
-								System.out.println("From header url parameters : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("body")) {
-								bodyData.put(param.getParamname(), value);
-								System.out.println("From header body : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("header")) {
-								headers.set(param.getParamname(), value);
-								System.out.println("From header header : "+param.getParamname()+" : "+value);
-							}
-							else if(param.getType().equals("query")) {
-								if(endPointUrl.indexOf("?")==-1) {
-									endPointUrl = endPointUrl+"?"+ param.getParamname()+ "="+ value;
-								}
-								else {
-									endPointUrl = endPointUrl+"&"+param.getParamname()+ "="+ value;
-								}
-								System.out.println("From header query : "+param.getParamname()+" : "+value);
-							}
-						}
-					}
-				}
-			}
-			String typeOfEndpoint = saveNewApi.getType();
-			if(typeOfEndpoint.equals("GET")) {
-				HttpEntity<Object> entity = new HttpEntity<Object>(headers);
-				
-				try {
-					String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
-					fullResponse = fullResponse + " " +response+"\n";
-				}catch(Exception e) {
-					System.out.println("error : "+e);
-				}
-			}
-			else if(typeOfEndpoint.equals("POST")) {
-				HttpEntity<Object> entity = new HttpEntity<Object>(bodyData, headers);
-				
-				try {
-					String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
-					fullResponse = fullResponse + response +"\n";
-				}catch(Exception e) {
-					System.out.println("error : "+e);
-				}
-			}
-			
-		}
-		return fullResponse;
 	}
 	
 	//Creating new api with path parameters
@@ -313,7 +347,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			}
 		}
 	
-		System.out.println("This is url from object : "+registerNewApi.getNewEndpoint());
+//		System.out.println("This is url from object : "+registerNewApi.getNewEndpoint());
 
 		return registerNewApi;
 		

@@ -100,7 +100,12 @@ export class PostApiComponent implements OnInit {
     
     this.registerApiService.createNewQueryApi(this.registerNewQueryApi).subscribe(
       data=>{
-        Swal.fire('Success', "Successfully Registered",'success');
+        if(data.code=="error"){
+          Swal.fire('Opps', "This endpoint is already used",'error');
+        }
+        else{
+          Swal.fire('Success', "Successfully Registered",'success');
+        }
         // window.location.reload();
         console.log(data);
       },

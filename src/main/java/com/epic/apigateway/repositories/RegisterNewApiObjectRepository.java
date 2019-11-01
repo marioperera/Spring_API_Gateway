@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface RegisterNewApiObjectRepository extends JpaRepository<RegisterNewApiObject ,Integer> {
 
     RegisterNewApiObject getByNewEndpoint(String newEndpoint);
+    RegisterNewApiObject findByNewEndpointAndType(String newEndpoint, String type);
     
     @Query("SELECT r FROM RegisterNewApiObject r WHERE r.newEndpoint LIKE ?1%")
     List<RegisterNewApiObject> findByLikeNewEndpointList(String newEndpoint);

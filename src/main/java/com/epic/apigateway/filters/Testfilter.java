@@ -105,11 +105,28 @@ public class Testfilter extends OncePerRequestFilter {
  	        	   }
  	        	   else {
  	        		   finalResponse = testService.newRequestUrlInPost(requestBodyMap, headersKeyAndValue, urlParam,  queryParameters);
- 	        		  httpServletResponse.getWriter().write(finalResponse);
  	        	   }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+<<<<<<< HEAD
+                if(finalResponse.equals("400")) {
+                	httpServletResponse.sendError(400, "There are missing parameters..!!");
+                }
+                else if(finalResponse.equals("500")) {
+                	httpServletResponse.sendError(400, "There is no api endpoint");
+                }
+                else {
+                	httpServletResponse.getWriter().write(finalResponse);
+                }
+                
+            }else if(httpServletRequest.getMethod().equals("GET")){
+                try {
+                    HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
+                    resultmap = partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
+//                    removing variables with null values
+//                    resultmap.remove(null);
+=======
 
                 httpServletResponse.getWriter().write(finalResponse);
 
@@ -126,6 +143,7 @@ public class Testfilter extends OncePerRequestFilter {
                         filterChain.doFilter(httpServletRequest,httpServletResponse);
                     }
 
+>>>>>>> 60704f44baf7294ac68d97f790dc3c419d7ced84
                     System.out.println(resultmap);
 //                    object to String mapper initialization
                     httpServletResponse.setContentType("Application/Json");
@@ -146,11 +164,11 @@ public class Testfilter extends OncePerRequestFilter {
 
         }
         else {
-        try{
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
-        }catch (Exception ignored){
-
-        }
+	        try{
+	            filterChain.doFilter(httpServletRequest,httpServletResponse);
+	        }catch (Exception ignored){
+	
+	        }
         }
     }
 

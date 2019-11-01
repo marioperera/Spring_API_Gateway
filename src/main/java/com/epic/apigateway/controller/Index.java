@@ -2,6 +2,7 @@ package com.epic.apigateway.controller;
 
 import com.epic.apigateway.beans.CallListElement;
 import com.epic.apigateway.dao.*;
+import com.epic.apigateway.dao.Mapping;
 import com.epic.apigateway.mongo.documents.SavenewApiDocument;
 import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
 import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
@@ -296,43 +297,69 @@ public class Index {
     private Responsebean registerNewApi(@RequestBody RegisterApiTemplateBean registerApiTemplateBean ) {
     	String endpoint = registerApiTemplateBean.getEndpoint();
     	String type = registerApiTemplateBean.getType();
-    	HashMap<String,CallListElement> endpointList = registerApiTemplateBean.getCall_list();
     	
-    	List<QueryEndpoint> queryEndpoints = new ArrayList<QueryEndpoint>();
-    	
-    	for(String key: endpointList.keySet()) {
-    		SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
-    		QueryEndpoint queryEndpoint = new QueryEndpoint();
-    		queryEndpoint.setEndpoint(key);
-    		queryEndpoint.setType(saveNewApiObj.getType());
-    		queryEndpoint.setParameters(saveNewApiObj.getParameters());
+    	RegisterNewApiObject registerNewApi = registerNewApiObjectRepository.findByNewEndpointAndType(endpoint, type);
+    	if(registerNewApi!=null) {
+    		System.out.println("There is a already registered api");
     		
-    		String reponseAttributes[] = endpointList.get(key).getResponse_attribs();
-    		List<ResponseAttribute> responseList = new ArrayList<ResponseAttribute>();
-    		
-    		for(String reponseName: reponseAttributes) {
-    			ResponseAttribute responseAttribute = new ResponseAttribute();
-    			responseAttribute.setAttribute(reponseName);
-    			responseList.add(responseAttribute);
-    		}
-    		queryEndpoint.setResponse_attribs(responseList);
-    		queryEndpoints.add(queryEndpoint);
+    		Responsebean responsebean = new Responsebean();
+    		responsebean.setCode("error");
+    		responsebean.setValue("Already registered Api");
+        	return responsebean;
     	}
-    	RegisterNewApiObject registerNewApiObject = new RegisterNewApiObject();
-    	registerNewApiObject.setNewEndpoint(endpoint);
-    	registerNewApiObject.setQueryEndpoints(queryEndpoints);
-    	registerNewApiObject.setType(type);
-    	
-    	Responsebean responsebean = new Responsebean();
-    	try {
-    		responsebean.setCode("ok");
-    		responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+    	else {
+    		System.out.println("There is no registered api");
+    		HashMap<String,CallListElement> endpointList = registerApiTemplateBean.getCall_list();
+        	
+        	List<QueryEndpoint> queryEndpoints = new ArrayList<QueryEndpoint>();
+        	
+        	for(String key: endpointList.keySet()) {
+        		SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
+        		QueryEndpoint queryEndpoint = new QueryEndpoint();
+        		queryEndpoint.setEndpoint(key);
+        		queryEndpoint.setType(saveNewApiObj.getType());
+        		queryEndpoint.setParameters(saveNewApiObj.getParameters());
+        		//queryEndpoint.setMappings(endpointList.get(key).getMappings());
+        		
+        		//SetMapping new mapping
+//        		List<Mapping> mappings = new ArrayList<Mapping>();
+//        		for(String paramName: endpointList.get(key).getMappings().keySet()) {
+//        			Mapping map = new Mapping();
+//        			map.setParamname(paramName);
+//        			map.setMappingname(endpointList.get(key).getMappings().get(paramName));
+//        			//map.setQueryEndpoint(queryEndpoint);
+//        			mappings.add(map);
+//        		}
+//        		
+//        		queryEndpoint.setMapping(mappings);
+        		
+        		String reponseAttributes[] = endpointList.get(key).getResponse_attribs();
+        		List<ResponseAttribute> responseList = new ArrayList<ResponseAttribute>();
+        		
+        		for(String reponseName: reponseAttributes) {
+        			ResponseAttribute responseAttribute = new ResponseAttribute();
+        			responseAttribute.setAttribute(reponseName);
+        			responseList.add(responseAttribute);
+        		}
+        		queryEndpoint.setResponse_attribs(responseList);
+        		queryEndpoints.add(queryEndpoint);
+        	}
+        	RegisterNewApiObject registerNewApiObject = new RegisterNewApiObject();
+        	registerNewApiObject.setNewEndpoint(endpoint);
+        	registerNewApiObject.setQueryEndpoints(queryEndpoints);
+        	registerNewApiObject.setType(type);
+        	
+        	Responsebean responsebean = new Responsebean();
+        	try {
+        		responsebean.setCode("ok");
+        		responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
+        	}
+        	catch(Exception e) {
+    			 responsebean.setCode("error");
+    	         responsebean.setValue(e.toString());
+        	}
+        	return responsebean;
     	}
-    	catch(Exception e) {
-			 responsebean.setCode("error");
-	         responsebean.setValue(e.toString());
-    	}
-    	return responsebean;
     }
     
     @PostMapping("/hsTest3/{uid}")

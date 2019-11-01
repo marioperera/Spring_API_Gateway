@@ -29,7 +29,9 @@ public class QueryEndpoint {
     @Transient
     private HashMap<String,String> mappings;
 
-
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "queryEndpoint", fetch = FetchType.EAGER)
+//    private List<Mapping> mapping;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ResponseAttribute> response_attribs;
 
@@ -83,4 +85,13 @@ public class QueryEndpoint {
     public void setParameters(List<Parameter> parameters) {
         this.parameters = parameters;
     }
+
+//	public List<Mapping> getMapping() {
+//		return mapping;
+//	}
+//
+//	public void setMapping(List<Mapping> mapping) {
+//		this.mapping = mapping;
+//	}
+    
 }
