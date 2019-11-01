@@ -31,7 +31,11 @@ public class QueryApiService {
             throw new Exception("no such published api exists");
         }
 
-        return commonService.get_response((HashMap) queryobjects,registerNewApiObject,headers);
+        try {
+            return commonService.get_response((HashMap) queryobjects,registerNewApiObject,headers);
+        } catch (Exception e) {
+            throw e;
+        }
 
 
     }

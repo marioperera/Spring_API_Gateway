@@ -49,7 +49,12 @@ export class SearchapiComponent implements OnInit {
   }
 
   public changeidtominus(item,attribute_id){
-    attribute_id.id =-1;
+    console.log("item added");
+    
+    setTimeout(()=>{
+      attribute_id.id =-1;
+    })
+    
     // console.log(item);
     // console.log(attribute_id);
     

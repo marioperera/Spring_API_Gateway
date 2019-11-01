@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class CommonService {
 
-    public HashMap get_response (HashMap req_object, List<QueryEndpoint> endpoints, HashMap<String,String> headers) throws NullPointerException{
+    public HashMap get_response (HashMap req_object, List<QueryEndpoint> endpoints, HashMap<String,String> headers) throws Exception {
 //        CREATE NEW REST-TEMPLATE OBJECT
 //        ADD NEW HTTP INTERCEPTOR
 //        SET CUSTOM HEADERS
@@ -56,10 +56,11 @@ public class CommonService {
                         System.out.println("ResultingJSONstring = " + json);
                         //System.out.println(json);
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+//                        e.printStackTrace();
+                        throw new Exception(url);
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+                    throw new Exception(url);
                 }
 
             }else {
@@ -71,7 +72,7 @@ public class CommonService {
                     System.out.println("response recieved from url "+url+" "+response.getValue());
 
                 }catch (Exception e){
-                    e.printStackTrace();
+                    throw new Exception(" error in "+url);
                 }
 
             }
@@ -82,7 +83,7 @@ public class CommonService {
 
 
             }catch (Exception e){
-                e.printStackTrace();
+                throw new Exception(url);
             }
 //          uncomment for chaining requests
 //            request =new HashMap();
@@ -135,9 +136,9 @@ public class CommonService {
         return null;
     }
 
-    public String GeneratenewGeturl(String url,HashMap<String,String> requestmap){
+    private String GeneratenewGeturl(String url, HashMap<String, String> requestmap){
         StringBuilder sb =new StringBuilder(url+"?");
-        requestmap.forEach((k,v)->sb.append(k+"="+v+"&"));
+        requestmap.forEach((k,v)-> sb.append(k).append("=").append(v).append("&"));
         int index =sb.lastIndexOf("&");
         if(index<=0){
             sb.setLength(0);

@@ -26,7 +26,7 @@ public class PartitionUrlService {
     @Autowired
     GetUrlEndpointService getUrlEndpointService;
 
-    public HashMap<String,String> captureGetParameters(String url, Map<String, String[]> urlparameters,HashMap<String,String> headers) throws Exception{
+    public HashMap captureGetParameters(String url, Map<String, String[]> urlparameters, HashMap<String,String> headers) throws Exception{
         HashMap<String,String> resmap =new HashMap<>();
         Map<String,String[]> requestmap =  urlparameters;
         System.out.println("came to partition url service");
@@ -52,10 +52,14 @@ public class PartitionUrlService {
         }else {
 
             if(requestParameters[2].equals("register")){
-                registerApiService.registerapi();
+//                registerApiService.registerapi();
 
             }else if(requestParameters[2].equals("query")){
-                return queryApiService.queryapi(url,resmap,headers);
+                try {
+                    return queryApiService.queryapi(url,resmap,headers);
+                } catch (Exception e) {
+                    throw e;
+                }
             }
 
         }
