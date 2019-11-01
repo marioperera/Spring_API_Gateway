@@ -23,6 +23,8 @@ export class RegisterApiComponent implements OnInit {
   responseTypes = new Array<any>();
   arrResponse = new Array<any>();
 
+  pathVariables = new Array<any>();
+
   requestObj = {};
   responseObj = {};
 
@@ -49,6 +51,32 @@ export class RegisterApiComponent implements OnInit {
     }
   }
 
+  addUrl():void{
+    var url = this.registerApi.endpoint;
+    if(url.charAt(url.length-1)=="}"){
+      console.log("There is a path variable");
+      for(let i=0; i<url.length-1; i++){
+        if(url.indexOf('{')!=-1){
+          
+          this.pathVariables.push(url.substring(url.lastIndexOf('{')+1,url.lastIndexOf('}')));
+
+          url = url.substring(0,url.lastIndexOf("{"));
+          console.log(url);
+        }
+        else{
+          break;
+        }
+      }
+      //console.log(this.pathVariables);
+    }
+    if(this.pathVariables.length!=0){
+      this.pathVariables.forEach(element => {
+        this.requestObj[element] = "param";
+      });
+    }
+    console.log(this.requestObj);
+  }
+
   registerApiSubmit():void{
     this.registerApi.type = this.options.value.floatLabel;
     this.registerApi.requestValues = this.requestValues;
@@ -71,6 +99,7 @@ export class RegisterApiComponent implements OnInit {
       }
       else if(error.error.text == "Successfully register"){
         Swal.fire('Success', "Successfully Registered",'success');
+        window.location.reload();
       }
       else if(error.error.text == "Bad Request" || error.error.error=="Internal Server Error"){
         Swal.fire('Warning','Bad Api. Verifiaction failed', 'warning');

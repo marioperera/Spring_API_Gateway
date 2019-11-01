@@ -109,18 +109,24 @@ public class Testfilter extends OncePerRequestFilter {
  	        	   }
  	        	   else {
  	        		   finalResponse = testService.newRequestUrlInPost(requestBodyMap, headersKeyAndValue, urlParam,  queryParameters);
- 	        		  httpServletResponse.getWriter().write(finalResponse);
  	        	   }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
-                httpServletResponse.getWriter().write(finalResponse);
+                if(finalResponse.equals("400")) {
+                	httpServletResponse.sendError(400, "There are missing parameters..!!");
+                }
+                else if(finalResponse.equals("500")) {
+                	httpServletResponse.sendError(400, "There is no api endpoint");
+                }
+                else {
+                	httpServletResponse.getWriter().write(finalResponse);
+                }
                 
             }else if(httpServletRequest.getMethod().equals("GET")){
                 try {
                     HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
-                    resultmap =partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
+                    resultmap = partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
 //                    removing variables with null values
 //                    resultmap.remove(null);
                     System.out.println(resultmap);
@@ -143,11 +149,11 @@ public class Testfilter extends OncePerRequestFilter {
 
         }
         else {
-        try{
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
-        }catch (Exception ignored){
-
-        }
+	        try{
+	            filterChain.doFilter(httpServletRequest,httpServletResponse);
+	        }catch (Exception ignored){
+	
+	        }
         }
     }
 
