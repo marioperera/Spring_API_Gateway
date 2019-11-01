@@ -120,7 +120,7 @@ public class Testfilter extends OncePerRequestFilter {
                 	httpServletResponse.getWriter().write(finalResponse);
                 }
                 
-            }else if(httpServletRequest.getMethod().equals("GET")){
+            }else if(httpServletRequest.getMethod().equals("GET")) {
                 try {
                     HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
                     resultmap = partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
