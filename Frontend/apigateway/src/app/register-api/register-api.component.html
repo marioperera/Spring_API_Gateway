@@ -32,12 +32,14 @@
                             </div>
                         </div>
                         <div *ngFor="let n of requestObj | keyvalue">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h6>Parameter Name: {{n.key}}</h6>
-                                </div>
-                                <div class="col-sm-6">
-                                    <h6>Parameter Type: {{n.value}}</h6>
+                            <div *ngIf="n.value=='param'">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6>Parameter Name: {{n.key}}</h6>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h6>Parameter Type: Path variable</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
