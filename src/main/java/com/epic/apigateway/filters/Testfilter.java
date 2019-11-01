@@ -124,7 +124,13 @@ public class Testfilter extends OncePerRequestFilter {
                 try {
                     HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
                     resultmap = partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
-//                    removing variables with null values
+                }catch (Exception br){
+                    System.out.println(br.getMessage());
+                    httpServletResponse.sendError(500,"BAD REQUEST PLEASE CHECK YOUR REQUEST PARAMETERS "+br.getMessage());
+                    filterChain.doFilter(httpServletRequest,httpServletResponse);
+                }
+
+                    //                    removing variables with null values
 //                    resultmap.remove(null);
 //=======
 //
@@ -157,9 +163,7 @@ public class Testfilter extends OncePerRequestFilter {
                     }
                     httpServletResponse.getWriter().write(json);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             }
 
         }
