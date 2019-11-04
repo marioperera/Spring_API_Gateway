@@ -24,7 +24,7 @@
                         <mat-form-field>
                             <input matInput id="endpoint" name="endpoint" [(ngModel)]="registerApi.endpoint" placeholder="Enter API endpoint" >
                         </mat-form-field>
-                        <div class="row">
+                            <!-- <div class="row">
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-primary pb-2" (click)="addUrl()">
                                     Add
@@ -34,15 +34,18 @@
                         <div *ngFor="let n of requestObj | keyvalue">
                             <div *ngIf="n.value=='param'">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <h6>Parameter Name: {{n.key}}</h6>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <h6>Parameter Type: Path variable</h6>
                                     </div>
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="requestValues[n]" placeholder="testing value">
+                                    </mat-form-field>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <mat-form-field>
                             <input [(ngModel)]="requestParamNo" type="number" min="0" matInput #input placeholder="Enter number of request parameters">
@@ -73,9 +76,9 @@
                                         <mat-option value="query">Query parameter</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                            <!-- <mat-form-field class="pl-2">
+                            <mat-form-field class="pl-2">
                                 <input matInput [(ngModel)]="requestValues[n]" placeholder="testing value">
-                            </mat-form-field> -->
+                            </mat-form-field>
                         </div>
                         <mat-form-field>
                             <input [(ngModel)]="reponseParamNo" type="number" min="0" matInput #input placeholder="Enter number of response parameters">
