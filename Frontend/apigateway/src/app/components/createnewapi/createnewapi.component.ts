@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
 import { response } from 'src/app/Models/response';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-createnewapi',
@@ -55,8 +55,12 @@ export class CreatenewapiComponent implements OnInit {
       try{
         if(res.code=="error"){
           this.register_error =true;
+          Swal.fire("Oops..! "," couldnt register api ",'error');
+          window.location.reload();
+          
         }else{
           this.register_error =false;
+          Swal.fire("Success"," New Api Created!! ",'success');
         }
       }
       catch(error){

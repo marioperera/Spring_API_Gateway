@@ -209,12 +209,14 @@ public class Index {
                     .getDistinctByUrl(registerNewApiObject.getNewEndpoint());
             if(endpoints==null){
                 apiDocumentRepository.save(savenewApiDocument);
+            }else{
+                throw new Exception("duplicate entries exists");
             }
 
 
         }catch (Exception e){
             responsebean.setCode("error");
-            responsebean.setValue(e.toString());
+            responsebean.setValue(e.getMessage());
         }
         responsebean.setValue("ok");
         return responsebean;
