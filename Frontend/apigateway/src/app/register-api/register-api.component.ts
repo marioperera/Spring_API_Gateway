@@ -29,6 +29,7 @@ export class RegisterApiComponent implements OnInit {
   responseObj = {};
 
   registerApi: RegisterApi = new RegisterApi();
+  index;
 
   constructor(fb: FormBuilder, private registerApiService: RegisterApiService) { 
     this.options = fb.group({
@@ -74,6 +75,8 @@ export class RegisterApiComponent implements OnInit {
         }
       }
       //console.log(this.pathVariables);
+      this.index = this.pathVariables.length;
+      console.log(this.index);
     }
     if(this.pathVariables.length!=0){
       this.pathVariables.forEach(element => {
