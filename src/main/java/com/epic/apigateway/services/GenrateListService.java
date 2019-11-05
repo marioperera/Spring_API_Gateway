@@ -49,13 +49,13 @@ public class GenrateListService {
 
     }
     
-    public List<Parameter> convertSetToListparameterWithType(HashMap<String, String> parameters)
+    public List<Parameter> convertSetToListparameterWithType(HashMap<String, String[]> parameters)
     {
         // create an empty list
         Set<Parameter> parms =new HashSet<>();
         
-        for (Map.Entry param : parameters.entrySet()) {
-            parms.add(new Parameter(String.valueOf(param.getKey()), String.valueOf(param.getValue())));
+        for (String param : parameters.keySet()) {
+            parms.add(new Parameter(param, parameters.get(param)[0], Boolean.valueOf(parameters.get(param)[1])));
         }
         List<Parameter> list = new ArrayList(parms);
         return list;
