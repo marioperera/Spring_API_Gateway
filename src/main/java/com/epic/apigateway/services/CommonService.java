@@ -68,12 +68,18 @@ public class CommonService {
                     }
 
 
-                    HashMap<String,Object> responsemap = new HashMap<>();
+                    HashMap<String,String> responsemap = new HashMap<>();
                     try{
                         ObjectMapper mapper = new ObjectMapper();
-                        Map<String,String> map =mapper.readValue(RECIEVED_RESPONSE,Map.class);
+                        Map<String,Object> map =mapper.readValue(RECIEVED_RESPONSE,Map.class);
                         response.setValue(map);
-                        responsemap = (HashMap<String, Object>) response.getValue();
+
+
+                        map.forEach((k,v)->{
+                            String vv =String.valueOf(v);
+                            responsemap.put(k,vv);
+                        });
+                        System.out.println(responsemap+" common service line 77");
 
 
                     }catch (Exception e){
@@ -86,11 +92,11 @@ public class CommonService {
                             for (ResponseAttribute val:endpoint.getResponse_attribs()
                             ) {
 //                        assert response != null;
-                                String field = (String) responsemap.get((String) val.getAttribute());
-//                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
+                                String field = (String) responsemap.get( ""+val.getAttribute());
+                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
                                 if(field!=null){
 
-                                    request.put(endpoint.getMappings().get(val.getAttribute()),responsemap.get(val.getAttribute()));
+                                    request.put(endpoint.getMappings().get(val.getAttribute()),responsemap.get(""+val.getAttribute()));
                                     System.out.println("line 81"+request);
 
                                 }
