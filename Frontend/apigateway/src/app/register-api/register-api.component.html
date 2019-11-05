@@ -70,7 +70,7 @@
                                 </mat-form-field>
                                 <mat-form-field class="pl-2" *ngIf="options.value.floatLabel=='POST' || options.value.floatLabel=='PUT' ">
                                     <mat-select placeholder="Select api type" [(ngModel)] = "requestTypes[n]">
-                                        <mat-option value="param">Url parameter</mat-option>
+                                        <mat-option value="param">Path parameter</mat-option>
                                         <mat-option value="header">Request header</mat-option>
                                         <mat-option value="body">Request body</mat-option>
                                         <mat-option value="query">Query parameter</mat-option>
