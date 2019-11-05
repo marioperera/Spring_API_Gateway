@@ -11,7 +11,7 @@ public class SaveNewApiBean  {
 
     String endpoint;
     String type;
-    HashMap<String,String> requestparams;
+    HashMap<String,String[]> requestparams;
     HashMap<String,String> responseparams;
     List<String> requestValues;
 
@@ -31,14 +31,6 @@ public class SaveNewApiBean  {
         this.type = type;
     }
 
-    public HashMap<String, String> getRequestparams() {
-        return requestparams;
-    }
-
-    public void setRequestparams(HashMap<String, String> requestparams) {
-        this.requestparams = requestparams;
-    }
-
     public HashMap<String, String> getResponseparams() {
         return responseparams;
     }
@@ -53,6 +45,14 @@ public class SaveNewApiBean  {
 
 	public void setRequestValues(List<String> requestValues) {
 		this.requestValues = requestValues;
+	}
+
+	public HashMap<String, String[]> getRequestparams() {
+		return requestparams;
+	}
+
+	public void setRequestparams(HashMap<String, String[]> requestparams) {
+		this.requestparams = requestparams;
 	}
       
 }

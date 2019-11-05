@@ -17,6 +17,9 @@ public class Parameter {
     
     @Column(name = "TYPE")
     private String type;
+    
+    @Column(name = "MANDATORY")
+    private Boolean mandatory;
 
     public Parameter() {
     }
@@ -28,6 +31,12 @@ public class Parameter {
     public Parameter(String paramname, String type) {
 		this.paramname = paramname;
 		this.type = type;
+	}
+    
+	public Parameter(String paramname, String type, Boolean mandatory) {
+		this.paramname = paramname;
+		this.type = type;
+		this.mandatory = mandatory;
 	}
 
 	public int getId() {
@@ -53,6 +62,13 @@ public class Parameter {
 	public void setType(String type) {
 		this.type = type;
 	}
-    
+
+	public Boolean getMandatory() {
+		return mandatory;
+	}
+
+	public void setMandatory(Boolean mandatory) {
+		this.mandatory = mandatory;
+	}
     
 }
