@@ -225,7 +225,7 @@ public class Index {
     }
 
     @PostMapping("/test")
-    public Responsebean test(@RequestBody HashMap<String,String> requestBody ){
+    public Map test(@RequestBody HashMap<String,String> requestBody ){
 //        System.out.println("test route called --> index controller line 74 ");
 //
 //        System.out.println("index controller line 77 "+requestBody.keySet());
@@ -236,11 +236,11 @@ public class Index {
         respmap.put("name1","hello /test");
         respmap.put("name2","hello2 /test");
         resp.setValue(respmap);
-        return resp;
+        return respmap;
     }
 
     @PostMapping("/test1")
-    public Responsebean test2(@RequestBody HashMap<String,String> requestBody){
+    public Map test2(@RequestBody HashMap<String,String> requestBody){
 //        System.out.println("test route called --> index controller line 84 ");
 //        System.out.println(requestBody.keySet());
         Responsebean resp =new Responsebean();
@@ -248,11 +248,11 @@ public class Index {
         respmap.put("name3","hello from test2");
         respmap.put("name4","hello /test2");
         resp.setValue(respmap);
-        return resp;
+        return respmap;
     }
 
     @GetMapping("/test3")
-    public Responsebean test3(@RequestParam String name2 ,@RequestParam String name1){
+    public Map test3(@RequestParam String name2 ,@RequestParam String name1){
         HashMap<String,String> resp = new HashMap<>();
         Responsebean responsebean =new Responsebean();
         if(name1!=null){
@@ -264,7 +264,7 @@ public class Index {
             resp.put("output6","value from pathvariable 2");
         }
         responsebean.setValue(resp);
-        return responsebean;
+        return resp;
     }
 
     public Field GetAttributeValue(Object o, String FiledName) throws NullPointerException{
