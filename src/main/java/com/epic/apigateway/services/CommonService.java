@@ -44,8 +44,8 @@ public class CommonService {
                 REQUEST_PARAMETER_LIST.add(P.getParamname());
             });
         }
-        System.out.println(" request parameter list "+REQUEST_PARAMETER_LIST);
-        System.out.println(" key set "+req_object.keySet());
+//        System.out.println(" request parameter list "+REQUEST_PARAMETER_LIST);
+//        System.out.println(" key set "+req_object.keySet());
         Map<String,Object> request = new HashMap<String,Object>();
         request =new HashMap();
         for (String request_param:REQUEST_PARAMETER_LIST
@@ -79,7 +79,7 @@ public class CommonService {
                             String vv =String.valueOf(v);
                             responsemap.put(k,vv);
                         });
-                        System.out.println(responsemap+" common service line 77");
+//                        System.out.println(responsemap+" common service line 77");
 
 
                     }catch (Exception e){
@@ -93,11 +93,11 @@ public class CommonService {
                             ) {
 //                        assert response != null;
                                 String field = (String) responsemap.get( ""+val.getAttribute());
-                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
+//                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
                                 if(field!=null){
 
                                     request.put(endpoint.getMappings().get(val.getAttribute()),responsemap.get(""+val.getAttribute()));
-                                    System.out.println("line 81"+request);
+//                                    System.out.println("line 81"+request);
 
                                 }
 
@@ -159,12 +159,12 @@ public class CommonService {
                 HttpEntity<Object> entity = new HttpEntity<Object>(bodyData, headers);
 
                 response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
-                System.out.println(response +" line 156 common service");
+//                System.out.println(response +" line 156 common service");
             }else if (Type.equals("GET")){
                 HttpEntity<Object> entity = new HttpEntity<Object>(headers);
 
                 response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
-                System.out.println(response +" line 161 common service");
+//                System.out.println(response +" line 161 common service");
             }
         } catch (RestClientException e) {
             throw new Exception("problem reaching url "+endPointUrl);
