@@ -77,7 +77,7 @@ public class RegisterVerifyService {
 					return restTemplate.postForEntity(url, null, String.class).getStatusCodeValue();
 				}
 				catch(HttpClientErrorException e){
-					return 400;
+					return 200;
 				}
 			}
 			else {
@@ -104,10 +104,12 @@ public class RegisterVerifyService {
 				
 				try {
 					if(apiType.equals("POST")) {
-						return restTemplate.postForEntity(url, entity, String.class, params).getStatusCodeValue();
+						return restTemplate.exchange(url,HttpMethod.POST, entity, String.class, params).getStatusCodeValue();
+
 					}
 					else {
 						return restTemplate.exchange(url, HttpMethod.PUT, entity, String.class, params).getStatusCodeValue();
+
 					}
 				}
 				catch (HttpClientErrorException e) {

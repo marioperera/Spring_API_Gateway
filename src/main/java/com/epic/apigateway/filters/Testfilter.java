@@ -126,7 +126,7 @@ public class Testfilter extends OncePerRequestFilter {
                     resultmap = partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
                 }catch (Exception br){
                     System.out.println(br.getMessage());
-                    httpServletResponse.sendError(500,"BAD REQUEST PLEASE CHECK YOUR REQUEST PARAMETERS "+br.getMessage());
+                    httpServletResponse.sendError(400,"BAD REQUEST PLEASE CHECK YOUR REQUEST PARAMETERS "+br.getMessage());
                     filterChain.doFilter(httpServletRequest,httpServletResponse);
                 }
 //                    removing variables with null values
@@ -170,7 +170,7 @@ public class Testfilter extends OncePerRequestFilter {
 	        try{
 	            filterChain.doFilter(httpServletRequest,httpServletResponse);
 	        }catch (Exception ignored){
-	
+
 	        }
         }
     }
