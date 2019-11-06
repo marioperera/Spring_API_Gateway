@@ -22,6 +22,7 @@ export class RegisterApiComponent implements OnInit {
   responseParameters = new Array<any>();
   responseTypes = new Array<any>();
   arrResponse = new Array<any>();
+  requestMandatory = new Array<any>();
 
   pathVariables = new Array<any>();
 
@@ -91,7 +92,7 @@ export class RegisterApiComponent implements OnInit {
     this.registerApi.requestValues = this.requestValues;
 
     for(let i=0; i<this.requestParameters.length; i++){
-      this.requestObj[this.requestParameters[i]] =  this.requestTypes[i];
+      this.requestObj[this.requestParameters[i]] =  [this.requestTypes[i], this.requestMandatory[i]];
     }
     
     for(let i=0; i<this.responseParameters.length; i++){
@@ -116,4 +117,8 @@ export class RegisterApiComponent implements OnInit {
       console.log(error)
     });
   }
+
+  // test():void{
+  //   console.log(this.requestMandatory);
+  // }
 }
