@@ -79,6 +79,11 @@
                             <mat-form-field class="pl-2">
                                 <input matInput [(ngModel)]="requestValues[n]" placeholder="testing value">
                             </mat-form-field>
+                            <mat-radio-group [(ngModel)]="requestMandatory[n]">
+                                <mat-radio-button class="pr-3" value="true">Mandatory</mat-radio-button>
+                                <mat-radio-button class="" value="false">Not Mandatory</mat-radio-button>
+                            </mat-radio-group>
+                            <hr>
                         </div>
                         <mat-form-field>
                             <input [(ngModel)]="reponseParamNo" type="number" min="0" matInput #input placeholder="Enter number of response parameters">

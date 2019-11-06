@@ -68,7 +68,7 @@ public class Testfilter extends OncePerRequestFilter {
 
                 	//getting request body
  	        	   String body =  httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
- 	        	   System.out.println("This is request body string : "+ body);
+ 	        	   System.out.println("(line 71 fliter)This is request body string : "+ body);
 
  	        	   //getting request headers
  	        	   Enumeration<String> headerNames =  httpServletRequest.getHeaderNames();
@@ -92,7 +92,14 @@ public class Testfilter extends OncePerRequestFilter {
 
  		        	   for(String pair: bodyArr) {
  		      			 String[] entry = pair.split(":");
- 		      			 requestBodyMap.put(entry[0].trim(), entry[1].trim());
+ 		      			 
+ 		      			 //if body have only key doesn't have value
+ 		      			 if(entry.length>1) {
+ 		      				 requestBodyMap.put(entry[0].trim(), entry[1].trim());
+ 		      			 }
+ 		      			 else {
+ 		      				requestBodyMap.put(entry[0].trim(), "\"\"");
+ 		      			 }
  		      		 	}
  		      		 	//System.out.println(requestBodyMap.get("\"requestparams\"").substring(1,requestBodyMap.get("\"requestparams\"").length()-1));
  		      		 	System.out.println(requestBodyMap.toString());

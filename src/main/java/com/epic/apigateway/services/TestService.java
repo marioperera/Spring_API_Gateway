@@ -487,13 +487,62 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			}
 		}
 		
-		if(numOfMandParam == endpointsMandParameters.size()) {
-			return true;
+		if(numOfMandParam >= endpointsMandParameters.size()) {
+			if(this.parameterValueEmptyOrNot(endpointsMandParameters, requestBodyMap, requestHeader, queryParameters, pathVaribles)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;
 		}
 		
+	}
+	
+	//Checking mandatory parameters have empty value or not
+	public Boolean parameterValueEmptyOrNot(List<String> mandtoryParameters, Map<String, String> requestBodyMap,
+			Map<String, String> requestHeader, Map<String,String[]> queryParameters, Map<String, String> pathVaribles) {
+	
+		int parameterValueCount = 0;
+		for(String mandtroyParamaterName : mandtoryParameters) {
+			
+			//Checking request Body
+			if(requestBodyMap.containsKey("\""+ mandtroyParamaterName+"\"")){
+				if(!requestBodyMap.get("\""+ mandtroyParamaterName+"\"").equals("\"\"")) {
+					parameterValueCount++;
+				}
+			}
+			
+			//Checking Request Header
+			else if(requestHeader.containsKey(mandtroyParamaterName)) {
+				if(!requestHeader.get(mandtroyParamaterName).equals("")) {
+					parameterValueCount++;
+				}
+			}
+			
+			//Checking Query Parameters
+			else if(queryParameters.containsKey(mandtroyParamaterName)) {
+				if(!queryParameters.get(mandtroyParamaterName)[0].equals("")) {
+					parameterValueCount++;
+				}
+			}
+			
+			//Checking Path Variables
+			else if(pathVaribles.containsKey(mandtroyParamaterName)) {
+				if(!pathVaribles.get(mandtroyParamaterName).equals("")) {
+					parameterValueCount++;
+				}
+			}
+		}
+		
+		if(mandtoryParameters.size()==parameterValueCount) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public void testingFunction(String url) {
