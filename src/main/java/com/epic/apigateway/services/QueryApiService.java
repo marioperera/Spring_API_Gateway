@@ -18,7 +18,7 @@ public class QueryApiService {
     @Autowired
     CommonService commonService;
 
-    public HashMap queryapi(String url, Map queryobjects,HashMap<String,String> headers) throws Exception {
+    public HashMap queryapi(String url, Map queryobjects, HashMap<String, String> headers) throws Exception {
         Logger.getAnonymousLogger().warning("Api Query");
         List<QueryEndpoint> registerNewApiObject;
 
@@ -26,13 +26,13 @@ public class QueryApiService {
 
         try {
             registerNewApiObject = (List<QueryEndpoint>) getUrlEndpointService.GetURL(url);
-        }catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
             throw new Exception("no such published api exists");
         }
 
         try {
-            return commonService.get_response((HashMap) queryobjects,registerNewApiObject,headers);
+            return (HashMap) commonService.get_response((HashMap) queryobjects, registerNewApiObject, headers);
         } catch (Exception e) {
             throw e;
         }
