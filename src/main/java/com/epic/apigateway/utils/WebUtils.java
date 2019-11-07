@@ -11,7 +11,7 @@ import java.util.Map;
 public class WebUtils {
     public Map<String, String> getHeadersInfo(HttpServletRequest request) {
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {

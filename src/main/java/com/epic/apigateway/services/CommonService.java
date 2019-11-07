@@ -4,6 +4,7 @@ import com.epic.apigateway.dao.Parameter;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.ResponseAttribute;
 import com.epic.apigateway.beans.Responsebean;
+import com.epic.apigateway.utils.HttpRestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,11 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * @author mario_p
@@ -27,83 +26,73 @@ import java.util.regex.Pattern;
 @Service
 public class CommonService {
 
-    public Map<String, Object> get_response(HashMap<String, String> req_object, List<QueryEndpoint> endpoints, HashMap<String, String> headers) throws Exception {
-//        CREATE NEW REST-TEMPLATE OBJECT
-//        ADD NEW HTTP INTERCEPTOR
-//        SET CUSTOM HEADERS
-
-        RestTemplate restTemplate = new RestTemplate();
+    Map<String, Object> get_response(HashMap<String, String> req_object, List<QueryEndpoint> endpoints, HashMap<String, String> headers) throws Exception {
 
         HashSet<String> REQUEST_PARAMETER_LIST = new HashSet<>();
 
-        HashSet<String> PathVariables =new HashSet<>();
+        HashSet<String> PathVariables = new HashSet<>();
 
 
         for (QueryEndpoint endpoint : endpoints
         ) {
             endpoint.getParameters().forEach(P -> {
-//                System.out.println("Got parameter name "+P.getParamname());
-////                System.out.println("Got parameter type "+P.getType());
-                if(P.getMandatory()){
+
+                if (P.getMandatory()) {
                     REQUEST_PARAMETER_LIST.add(P.getParamname());
 
                 }
-                if(P.getType().equals("path")){
+                if (P.getType().equals("path")) {
 
                     PathVariables.add(P.getParamname());
                 }
 
-//                REQUEST_PARAMETER_LIST.add(P.getParamname());
+
             });
         }
-        System.out.println(req_object+" request object ");
-        System.out.println("Path Variables "+PathVariables+"\n Request parameters "+REQUEST_PARAMETER_LIST);
+        System.out.println(req_object + " request object ");
+        System.out.println("Path Variables " + PathVariables + "\n Request parameters " + REQUEST_PARAMETER_LIST);
 
 
-        //
-        // System.out.println(" request parameter list "+REQUEST_PARAMETER_LIST);
-//        System.out.println(" key set "+req_object.keySet());
-        Map<String, Object> request = new HashMap<String, Object>();
-        request = new HashMap();
+        Map<String, Object> request;
+        request = new HashMap<>();
         for (String request_param : REQUEST_PARAMETER_LIST
         ) {
-            if (!req_object.containsKey(request_param) &&  REQUEST_PARAMETER_LIST.size()>0) {
+            if (!req_object.containsKey(request_param) && REQUEST_PARAMETER_LIST.size() > 0) {
                 throw new Exception("DOES NOT CONTAIN PARAMETER ID " + request_param);
             } else {
                 for (QueryEndpoint endpoint : endpoints
                 ) {
                     String url = endpoint.getEndpoint();
 
-                    url =SetPathVariables(url,PathVariables,req_object);
+                    url = SetPathVariables(url, PathVariables, req_object);
 
-                    Logger.getAnonymousLogger().info("Modified url is "+url);
+                    Logger.getAnonymousLogger().info("Modified url is " + url);
 
                     endpoint.setEndpoint(url);
 
                     Responsebean response = new Responsebean();
 
-                    String RECIEVED_RESPONSE = "";
+                    String RECEIVED_RESPONSE;
                     try {
-                        RECIEVED_RESPONSE = make_rest_request(endpoint, req_object, restTemplate);
-                        System.out.println("recieved response form " + url + " \n" + RECIEVED_RESPONSE);
+                        RECEIVED_RESPONSE = make_rest_request(endpoint, req_object);
+                        System.out.println("recieved response form " + url + " \n" + RECEIVED_RESPONSE);
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw e;
                     }
 
 
-                    HashMap<String, String> responsemap = new HashMap<>();
+                    HashMap<String, String> response_map = new HashMap<>();
                     try {
                         ObjectMapper mapper = new ObjectMapper();
-                        Map<String, Object> map = mapper.readValue(RECIEVED_RESPONSE, Map.class);
+                        Map<String, Object> map = mapper.readValue(RECEIVED_RESPONSE, Map.class);
                         response.setValue(map);
 
 
                         map.forEach((k, v) -> {
                             String vv = String.valueOf(v);
-                            responsemap.put(k, vv);
+                            response_map.put(k, vv);
                         });
-//                        System.out.println(responsemap+" common service line 77");
 
 
                     } catch (Exception e) {
@@ -112,16 +101,15 @@ public class CommonService {
 
                     try {
                         if (endpoint.getResponse_attribs() != null) {
-//                    System.out.println("printing response attributes for endpoint "+endpoint.getEndpoint().toString()+" "+endpoint.getResponse_attribs());
                             for (ResponseAttribute val : endpoint.getResponse_attribs()
                             ) {
-//                        assert response != null;
-                                String field = (String) responsemap.get( val.getAttribute());
-//                        System.out.println("required outputs from url "+url+" "+val.getAttribute()+" from responses "+responsemap.get(val.getAttribute()));
+
+                                String field = response_map.get(val.getAttribute());
+
                                 assert field != null;
 
-                                request.put(endpoint.getMappings().get(val.getAttribute()), responsemap.get( val.getAttribute()));
-//                                    System.out.println("line 81"+request);
+                                request.put(endpoint.getMappings().get(val.getAttribute()), response_map.get(val.getAttribute()));
+
 
                             }
                         }
@@ -138,19 +126,25 @@ public class CommonService {
 
 
     }
+/**
+* @param endpoint the current endpoint
+* @param req_object the map of responses required by the user
+* @return String(APPLICATION_JSON)
+**/
 
-    private String make_rest_request(QueryEndpoint endpoint, HashMap<String, String> req_object, RestTemplate restTemplate) throws Exception {
+    private String make_rest_request(QueryEndpoint endpoint, HashMap<String, String> req_object) throws Exception {
         StringBuilder endPointUrl = new StringBuilder(endpoint.getEndpoint());
 
+        RestTemplate restTemplate = HttpRestUtils.GetInstance();
         String Type = endpoint.getType();
 
-        List<Parameter> REQUEST_PARAMETERS = new ArrayList<>();
+        List<Parameter> REQUEST_PARAMETERS;
 
         REQUEST_PARAMETERS = endpoint.getParameters();
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
 
-        Map<String, String> bodyData = new HashMap<String, String>();
+        Map<String, String> bodyData = new HashMap<>();
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -177,15 +171,16 @@ public class CommonService {
         }
         try {
             if (Type.equals("POST")) {
-                HttpEntity<Object> entity = new HttpEntity<Object>(bodyData, headers);
+                HttpEntity<Object> entity = new HttpEntity<>(bodyData, headers);
 
                 response = restTemplate.exchange(endPointUrl.toString(), HttpMethod.POST, entity, String.class, params).getBody();
-//                System.out.println(response +" line 156 common service");
-            } else if (Type.equals("GET")) {
-                HttpEntity<Object> entity = new HttpEntity<Object>(headers);
 
+            } else if (Type.equals("GET")) {
+                HttpEntity<Object> entity = new HttpEntity<>(headers);
+
+                System.out.println(endPointUrl.toString());
                 response = restTemplate.exchange(endPointUrl.toString(), HttpMethod.GET, entity, String.class, params).getBody();
-//                System.out.println(response +" line 161 common service");
+
             }
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -194,20 +189,26 @@ public class CommonService {
 
         return response;
     }
+/**
+ * @param url the url currently set on the request endpoint
+ * @param path_variables the map of path variables resisted by the user
+ * @param req_object the map of responses required by the user
+ * @return String
+ * **/
 
-    private String SetPathVariables(String url,HashSet<String> pathvaribles,HashMap<String,String> req_object){
-        if(!url.contains("{")){
+    private String SetPathVariables(String url, HashSet<String> path_variables, HashMap<String, String> req_object) {
+        if (!url.contains("{")) {
             return url;
-        }else {
-            String new_Ret_url="";
-            System.out.println("got regex objects for request_obj Pathvariables =>"+pathvaribles);
-            for (String PathVarible:pathvaribles
+        } else {
+            String new_Ret_url = url;
+            System.out.println("got regex objects for request_obj Pathvariables =>" + path_variables);
+            for (String Path_Variable : path_variables
             ) {
-                String regex ="(\\{";
-                regex +=PathVarible;
-                regex +="})";
-                new_Ret_url = url.replaceAll(regex,String.valueOf(req_object.get(PathVarible)));
-                System.out.println(new_Ret_url+" modified url");
+                String regex = "(\\{";
+                regex += Path_Variable;
+                regex += "})";
+                new_Ret_url = url.replaceAll(regex, String.valueOf(req_object.get(Path_Variable)));
+                System.out.println(new_Ret_url + " modified url");
 
             }
 
