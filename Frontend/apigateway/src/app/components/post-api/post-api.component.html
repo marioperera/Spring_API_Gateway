@@ -45,7 +45,13 @@
                         <!-- <mat-checkbox style="padding: 10px;"*ngfor="let req of item.parameters"  >{{req.paramname}}</mat-checkbox> -->
                         <div class="">
                             <br>
-                            <button type="button" (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button>
+                            <div *ngIf="selectedAPi.includes(item)">
+                                <b style="color: brown;">This is selected<i class="material-icons">done</i></b>
+                                <!-- <button type="button" disabled (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button> -->
+                            </div>
+                            <div *ngIf="!selectedAPi.includes(item)">
+                                <button type="button" (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button>
+                            </div>
                         </div>
                     </div>
                 </mat-card>
@@ -56,8 +62,20 @@
                             <b>Your selected api : </b>{{item.url}}
                             <br>
                             <b>Request parameters for call this api : </b>
-                            <div *ngFor="let param of item.parameters">
-                                {{param.paramname}}
+                            <div class="pb-2 pt-2" *ngFor="let param of item.parameters">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{param.paramname}} :
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div *ngIf="param.mandatory==true">
+                                            <b>Mandatory Parameter</b>
+                                        </div>
+                                        <div *ngIf="param.mandatory==false">
+                                            <b>Not Mandatory Parameter</b>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="pt-1">
                                 <button type="button" (click)="removeSelectedApi(selectedAPi.indexOf(item))" class="btn btn-danger pt-2">Remove</button>

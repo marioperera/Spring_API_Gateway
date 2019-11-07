@@ -86,7 +86,7 @@ public class Testfilter extends OncePerRequestFilter {
  	        	 //request body map into HashMap
  	        	   Map<String, String> requestBodyMap = new HashMap<>();
 
- 	        	   if(body.length()!=0) {
+ 	        	   if(body.length()!=0 && !body.equals("{}")) {
  	        		   body = body.substring(1, body.length()-1);
  		        	   String[] bodyArr = body.split(",");
 
