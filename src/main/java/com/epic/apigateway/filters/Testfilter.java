@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,7 +19,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import com.epic.apigateway.services.TestService;
 
 
@@ -39,7 +36,7 @@ public class Testfilter extends OncePerRequestFilter {
     WebUtils webUtils;
 
     @Override
-    protected void doFilterInternal( HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException, IOException, ServletException {
+    protected void doFilterInternal( HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws  IOException, ServletException {
 
 
     	System.out.println("This is from fliter");
@@ -74,7 +71,7 @@ public class Testfilter extends OncePerRequestFilter {
  	        	   Enumeration<String> headerNames =  httpServletRequest.getHeaderNames();
  	        	   ArrayList<String> headerNamesList = Collections.list(headerNames);
 
- 	        	   Map<String, String> headersKeyAndValue  = new HashMap<String, String>();
+ 	        	   Map<String, String> headersKeyAndValue  = new HashMap<>();
 
  	        	   for(String headerName : headerNamesList) {
  	        		   headersKeyAndValue.put(headerName,  httpServletRequest.getHeader(headerName));

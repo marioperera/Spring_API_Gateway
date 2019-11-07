@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChildren } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
 // import { myElement } from 'src/app/Models/myElement';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-searchapi',
@@ -28,8 +29,6 @@ export class SearchapiComponent implements OnInit {
       console.log(res);
       this.URL_list.push(res);
       console.log(this.URL_list[0]);
-      
-      
     });
     
   }
@@ -78,8 +77,11 @@ export class SearchapiComponent implements OnInit {
     console.log(myElement.value);
     this.mapping =myElement.value;
     console.log(this.mapping,attribute);
-    this.mappings[attribute] =this.mapping;
-    this.mapping ="";
+    Swal.fire("proceed?","the mapping "+this.mapping+" will be added to the "+attribute,"question").then(()=>{
+      this.mappings[attribute] =this.mapping;
+      this.mapping ="";
+    })
+    
     
   }
 
@@ -87,12 +89,10 @@ export class SearchapiComponent implements OnInit {
     // console.log("log to console called");
     // console.log(item);
     this.attributes=new Array();
-    
     // this.call_list = JSON.parse(localStorage.getItem("call_list"))
     item.responseAttributes.forEach(attrib => {
       if(attrib.id ==-1){
         this.attributes.push(attrib.attribute)
-        
       }
     });
     // console.log(this.attributes);
@@ -102,17 +102,10 @@ export class SearchapiComponent implements OnInit {
     var id:number =item.id;
     console.log(item.id);
     this.mappings = {};
-    
-
     this.call_list[id] =apiurlobject;
-    
-
-    
     console.log(this.call_list);
     localStorage.setItem("call_list",JSON.stringify(this.call_list));
-    
-    
-    
+    Swal.fire("Success","Url added to the api call list","success");
   }
 
 }
