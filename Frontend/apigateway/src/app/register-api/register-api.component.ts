@@ -104,7 +104,9 @@ export class RegisterApiComponent implements OnInit {
 
     this.registerApiService.createApi(this.registerApi).subscribe(
       data=> console.log(data),
-      error=>{if(error.error.text == "Already regitered url"){
+      error=>{
+        console.log(error.error.text);
+        if(error.error.text == "Already regitered url"){
         Swal.fire('Oops...', 'Already Registered Api!', 'error');
       }
       else if(error.error.text == "Successfully register"){
@@ -113,6 +115,9 @@ export class RegisterApiComponent implements OnInit {
       }
       else if(error.error.text == "Bad Request" || error.error.error=="Internal Server Error"){
         Swal.fire('Warning','Bad Api. Verifiaction failed', 'warning');
+      }
+      else{
+        Swal.fire('Oops...', 'Already Registered Api!', 'error');
       }
       console.log(error)
     });

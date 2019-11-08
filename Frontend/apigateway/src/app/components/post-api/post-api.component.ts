@@ -90,7 +90,8 @@ export class PostApiComponent implements OnInit {
       }
 
       responseArrObject["response_attribs"] = responseArr;
-      this.call_list[this.selectedAPi[i].url] = responseArrObject;
+      this.call_list[this.selectedAPi[i].url+"-"+this.selectedAPi[i].type] = responseArrObject;
+      //this.call_list[this.selectedAPi[i].url] = responseArrObject;
 
     }
 
@@ -101,17 +102,15 @@ export class PostApiComponent implements OnInit {
     
     this.registerApiService.createNewQueryApi(this.registerNewQueryApi).subscribe(
       data=>{
-
+        console.log("register data");
+        console.log(data);
         if(data.code=="error"){
           Swal.fire('Opps', "This endpoint is already used",'error');
-
         }
         else{
-
           Swal.fire('Success', "Successfully Registered",'success');
 
         }
-        console.log(data);
       },
       error=>{
 

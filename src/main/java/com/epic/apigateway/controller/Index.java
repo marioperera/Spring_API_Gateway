@@ -313,9 +313,14 @@ public class Index {
             List<QueryEndpoint> queryEndpoints = new ArrayList<QueryEndpoint>();
 
             for (String key : endpointList.keySet()) {
-                SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
+            	
+            	String urlAndType[] = key.split("-");
+            	
+                //SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
+            	SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrlAndType(urlAndType[0], urlAndType[1]);
                 QueryEndpoint queryEndpoint = new QueryEndpoint();
-                queryEndpoint.setEndpoint(key);
+                queryEndpoint.setEndpoint(urlAndType[0]);
+                //queryEndpoint.setEndpoint(key);
                 queryEndpoint.setType(saveNewApiObj.getType());
                 queryEndpoint.setParameters(saveNewApiObj.getParameters());
                 //queryEndpoint.setMappings(endpointList.get(key).getMappings());

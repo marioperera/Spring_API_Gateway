@@ -216,6 +216,13 @@ public class TestService {
 							fullResponse = fullResponse + " " +response+"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
+							try {
+								String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
+								fullResponse = fullResponse + " " +response+"\n";
+							}catch(Exception ex){
+								System.out.println("error : "+ex);
+								fullResponse = "500";
+							}
 						}
 					}
 					else if(typeOfEndpoint.equals("DELETE")) {
@@ -236,6 +243,13 @@ public class TestService {
 							fullResponse = fullResponse + response +"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
+							try {
+								String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
+								fullResponse = fullResponse + " " +response+"\n";
+							}catch(Exception ex){
+								System.out.println("error : "+ex);
+								fullResponse = "500";
+							}
 						}
 					}
 					else if(typeOfEndpoint.equals("PUT")) {
@@ -395,7 +409,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 		//Checking mand parameters have in parameterFilter list
 		long numOfMandParam = parameterFilter.stream().filter(parameterName -> endpointsMandParameters.contains(parameterName)).count();
 		
-		System.out.println("Test Service line 469 : " + numOfMandParam);
+		System.out.println("Test Service line 412 : " + numOfMandParam);
 		
 		if(numOfMandParam >= endpointsMandParameters.size()) {
 			if(this.parameterValueEmptyOrNot(endpointsMandParameters, requestBodyMap, requestHeader, queryParameters, pathVaribles)) {
