@@ -1,15 +1,4 @@
 <div class="example-container" style="margin-left: 30%;"> 
-    <!-- <br>
-    <br>
-    <a>http://localhost:4001/api/  </a>
-    <mat-form-field>
-      <input matInput placeholder="URL endpoint" [formControl]="email" required> -->
-      <!-- <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error> -->
-    <!-- </mat-form-field>
-    <br> -->
-    
-    <!-- <button style="padding: 10px; margin-bottom: 10px; margin-left: 20px; " type="button" (click)="addtoUrlList()" class="btn btn-success">get url endpoints</button> -->
-    
     <h5>
         Select API's
     </h5>
@@ -23,31 +12,20 @@
                     <div>
                         {{item.url}}
                         <br>
-
-                        <!-- <b>Requesting parameters for call this url</b>
-                        <div style="padding: 10px;" *ngFor="let attrb of item.parameters">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    {{attrb.paramname}}
-                                </div>
-                            </div>
-                        </div> -->
                         <b>Response attributes form call this url</b>
                         <div style="padding: 10px;" *ngFor="let attrb of item.responseAttributes">
-                                <div class="row">
-                                    <div class="col-sm-10">
-                                        {{attrb.attribute}}
-                                    </div>
-                                    <div class="col-sm-2">
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    {{attrb.attribute}}
+                                </div>
+                                <div class="col-sm-2">
                                 </div>
                             </div>
-                        <!-- <mat-checkbox style="padding: 10px;"*ngfor="let req of item.parameters"  >{{req.paramname}}</mat-checkbox> -->
+                        </div>
                         <div class="">
                             <br>
                             <div *ngIf="selectedAPi.includes(item)">
-                                <b style="color: brown;">This is selected<i class="material-icons">done</i></b>
-                                <!-- <button type="button" disabled (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button> -->
+                                <b style="color: brown;">This is selected<i class="material-icons">done_all</i></b>
                             </div>
                             <div *ngIf="!selectedAPi.includes(item)">
                                 <button type="button" (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button>
@@ -81,29 +59,27 @@
                                 <button type="button" (click)="removeSelectedApi(selectedAPi.indexOf(item))" class="btn btn-danger pt-2">Remove</button>
                             </div>
                         </div>
-                            <div class="row pt-2">
-                                <div class= "col-sm-4">
-                                    <mat-select placeholder="Select api type">
-                                        <mat-option value="POST">POST</mat-option>
-                                    </mat-select>
-                                </div>
+                        <div class="row pt-2">
+                            <div class= "col-sm-4">
+                                <mat-select placeholder="Select api type">
+                                    <mat-option value="POST">POST</mat-option>
+                                </mat-select>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a>
-                                    http://localhost:4001/query/ 
-                                    </a>
-                                    <mat-form-field>
-                                        <input matInput id="endpoint" name="endpoint" [(ngModel)]="queryurl" placeholder="Enter New API endpoint" >
-                                    </mat-form-field>
-                                    <button type="button" (click)="submitForm()" class="btn btn-primary pt-2">Create New API</button>
-                                </div>
-                            </div> 
-                        
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a>
+                                http://localhost:4001/query/ 
+                                </a>
+                                <mat-form-field>
+                                    <input matInput id="endpoint" name="endpoint" [(ngModel)]="queryurl" placeholder="Enter New API endpoint" >
+                                </mat-form-field>
+                                <button type="button" (click)="submitForm()" class="btn btn-primary pt-2">Create New API</button>
+                            </div>
+                        </div>     
                     </mat-card>
                 </div>
             </div>
         </div>
     </div>
-    
-  </div>
+</div>

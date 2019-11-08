@@ -44,37 +44,29 @@ export class PostApiComponent implements OnInit {
   }
 
   public changeidtominus(item,attribute_id){
+
     attribute_id.id =-1;
-    // console.log(item);
-    // console.log(attribute_id);
-    
-    
+
   }
 
   public addtoUrlList(item){
-    // console.log("log to console called");
-    // console.log(item);
+
     this.attributes=new Array();
-    
-    // this.call_list = JSON.parse(localStorage.getItem("call_list"))
+
     item.responseAttributes.forEach(attrib => {
       if(attrib.id ==-1){
         this.attributes.push(attrib.attribute)
         
       }
     });
-    // console.log(this.attributes);
     
     var id:number =item.id;
     console.log(item.id);
     this.call_list[id] =this.attributes;
     
-
-    
     console.log(this.call_list);
     localStorage.setItem("call_list",JSON.stringify(this.call_list));
-    
-    
+      
   }
 
   public addSelectApiList(item){
@@ -83,16 +75,25 @@ export class PostApiComponent implements OnInit {
   }
 
   public submitForm():void{
+
     this.registerNewQueryApi.type = "POST";
+
     for(let i=0; i<this.selectedAPi.length; i++){
+
       let responseArr:any =[];
       let responseArrObject:any={};
+
       for(let j=0; j<this.selectedAPi[i].responseAttributes.length; j++){
+
         responseArr[j]= this.selectedAPi[i].responseAttributes[j].attribute;
+
       }
+
       responseArrObject["response_attribs"] = responseArr;
       this.call_list[this.selectedAPi[i].url] = responseArrObject;
+
     }
+
     console.log("This is call_list");
     console.log(this.call_list);
     this.registerNewQueryApi.endpoint = "http://localhost:4001/query/"+this.queryurl;
@@ -100,18 +101,23 @@ export class PostApiComponent implements OnInit {
     
     this.registerApiService.createNewQueryApi(this.registerNewQueryApi).subscribe(
       data=>{
+
         if(data.code=="error"){
           Swal.fire('Opps', "This endpoint is already used",'error');
+
         }
         else{
+
           Swal.fire('Success', "Successfully Registered",'success');
+
         }
-        // window.location.reload();
         console.log(data);
       },
       error=>{
+
         Swal.fire('Opps', "Something went wrong",'error');
         console.log(error);
+        
       }
 
     )
