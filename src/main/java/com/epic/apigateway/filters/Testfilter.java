@@ -118,10 +118,9 @@ public class Testfilter extends OncePerRequestFilter {
                 else if(finalResponse.equals("404")) {
                 	httpServletResponse.sendError(404, "There is no api endpoint");
                 }
-
-
-
-
+                else if(finalResponse.equals("500")) {
+                	httpServletResponse.sendError(500, "Connection reset...!!!");
+                }
                 else {
                 	httpServletResponse.getWriter().write(finalResponse);
 
