@@ -36,6 +36,7 @@ public class CommonService {
 
         HashSet<String> PathVariables = new HashSet<>();
 
+        System.out.println("headers : "+headers);
 
         for (QueryEndpoint endpoint : endpoints
         ) {
@@ -43,10 +44,15 @@ public class CommonService {
 
                 if (P.getMandatory()) {
                     REQUEST_PARAMETER_LIST.add(P.getParamname());
+                    if(headers.containsKey(P.getParamname())){
+                        System.out.println("added "+P.getParamname()+" to request object ");
+                        req_object.put(P.getParamname(),headers.get(P.getParamname()));
+                    }
 
                 }
                 if (P.getType().equals("path")) {
-
+                    System.out.println("added "+P.getParamname()+" to request object ");
+                    req_object.put(P.getParamname(),headers.get(P.getParamname()));
                     PathVariables.add(P.getParamname());
                 }
 
