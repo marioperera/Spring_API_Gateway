@@ -4,8 +4,9 @@ import com.epic.apigateway.dao.Parameter;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.ResponseAttribute;
 import com.epic.apigateway.beans.Responsebean;
-import com.epic.apigateway.utils.HttpRestUtils;
+import com.epic.apigateway.utils.RestTemplateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,9 @@ import java.util.logging.Logger;
 
 @Service
 public class CommonService {
+
+    @Autowired
+    RestTemplateConfig restTemplateConfig;
 
     Map<String, Object> get_response(HashMap<String, String> req_object, List<QueryEndpoint> endpoints, HashMap<String, String> headers) throws Exception {
 
@@ -135,7 +139,7 @@ public class CommonService {
     private String make_rest_request(QueryEndpoint endpoint, HashMap<String, String> req_object) throws Exception {
         StringBuilder endPointUrl = new StringBuilder(endpoint.getEndpoint());
 
-        RestTemplate restTemplate = HttpRestUtils.GetInstance();
+        RestTemplate restTemplate = restTemplateConfig.restTemplate();
         String Type = endpoint.getType();
 
         List<Parameter> REQUEST_PARAMETERS;

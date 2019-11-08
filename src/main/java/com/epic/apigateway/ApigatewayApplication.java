@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EntityScan("com.epic.apigateway.dao")
 @EnableJpaRepositories(basePackages = "com.epic.apigateway.repositories")
 @EnableMongoRepositories(basePackages = "com.epic.apigateway.mongo.mongorepository")
-@ComponentScan("com.epic.apigateway")
+//@ComponentScan("com.epic.apigateway")
 public class ApigatewayApplication {
 
     public static void main(String[] args) {

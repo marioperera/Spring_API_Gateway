@@ -26,7 +26,7 @@ public class PartitionUrlService {
     @Autowired
     GetUrlEndpointService getUrlEndpointService;
 
-    public HashMap<String,String> captureGetParameters(String url, Map<String, String[]> urlparameters, HashMap<String,String> headers) throws Exception{
+    public HashMap captureGetParameters(String url, Map<String, String[]> urlparameters, HashMap<String,String> headers) throws Exception{
         HashMap<String,String> resmap =new HashMap<>();
         Map<String,String[]> requestmap =  urlparameters;
         System.out.println("came to partition url service");
@@ -55,11 +55,7 @@ public class PartitionUrlService {
 //                registerApiService.registerapi();
 
             }else if(requestParameters[2].equals("query")){
-                try {
-                    return queryApiService.queryapi(url,resmap,headers);
-                } catch (Exception e) {
-                    throw e;
-                }
+                return queryApiService.queryapi(url,resmap,headers);
             }
 
         }
@@ -73,7 +69,7 @@ public class PartitionUrlService {
         List<QueryEndpoint> registerNewApiObject;
 
         try {
-            registerNewApiObject = (List<QueryEndpoint>) getUrlEndpointService.GetURL(uri);
+            registerNewApiObject = getUrlEndpointService.GetURL(uri);
         }catch (HibernateException e){
             e.printStackTrace();
             throw new Exception("no such published api exists");
