@@ -48,13 +48,13 @@ public class Testfilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest,httpServletResponse);
 
         }
+        
 //        query results will be written as a hashmap
-
         HashMap<String,String> resultmap =new HashMap<>();
 
         if(httpServletRequest.getRequestURI().equalsIgnoreCase("/query/")|| httpServletRequest.getRequestURI().contains("/query/")){
+        	
 //            check wether the request method is GET or POST
-//        	httpServletResponse.getWriter().write("Helloo");
             if(httpServletRequest.getMethod().equals("POST")){
             	String finalResponse = "";
                 try {
@@ -98,13 +98,11 @@ public class Testfilter extends OncePerRequestFilter {
  		      				requestBodyMap.put(entry[0].trim(), "\"\"");
  		      			 }
  		      		 	}
- 		      		 	//System.out.println(requestBodyMap.get("\"requestparams\"").substring(1,requestBodyMap.get("\"requestparams\"").length()-1));
+ 		        	   
  		      		 	System.out.println(requestBodyMap.toString());
 
  		      		 	finalResponse = testService.newRequestUrlInPost(requestBodyMap, headersKeyAndValue, urlParam,  queryParameters);
- 		      		 	//System.out.println(testService.pathvaribleValue("http://localhost:4001"+urlParam, "http://localhost:4001/query/hesa/{id}/{name}").toString());
  		      		 System.out.println(finalResponse);
-// 		      		httpServletResponse.getWriter().write("Helloo");
 
  	        	   }
  	        	   else {
@@ -113,12 +111,12 @@ public class Testfilter extends OncePerRequestFilter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//<<<<<<< HEAD
+
                 if(finalResponse.equals("400")) {
                 	httpServletResponse.sendError(400, "There are missing parameters..!!");
                 }
-                else if(finalResponse.equals("500")) {
-                	httpServletResponse.sendError(400, "There is no api endpoint");
+                else if(finalResponse.equals("404")) {
+                	httpServletResponse.sendError(404, "There is no api endpoint");
                 }
 
 
