@@ -13,9 +13,15 @@
         <div>
             {{item.url}}
             <br>
-           
+            <br>
+            <b>Mandatory Request Parameters</b>
+            <div *ngFor="let param of item.parameters">
+                <a *ngIf="param.mandatory===true">{{param.paramname}}</a>
+            
+            </div>
+           <br>
 <!-- cutom attribute silector -->
-            <b>attributes :</b>
+            <b>Response Attributes :</b>
             <br>
             <div *ngFor="let attrb of item.responseAttributes">
                 <mat-checkbox style="padding: 10px;"  (click) ="changeidtominus(item,attrb)" style="font-family: 'Courier New', Courier, monospace; margin-top: 30px;">{{attrb.attribute}} </mat-checkbox>
