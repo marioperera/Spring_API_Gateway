@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -29,31 +30,6 @@ public class TestService {
 	@Autowired
 	SaveNewApiObjRepository saveNewApiObjRepo;
 	
-//	public String newRequestUrlInPost(Map<String, String> requestBodyMap, ArrayList<String> urlArr ) {
-//		RestTemplate restTemplate = new RestTemplate();
-//		
-//		String url1 = "http://localhost:4001/api/hsTest/{name}";
-//		String url2 = "http://localhost:4001/api/hsTest2/{some}";
-//		String[] urls = {url1, url2};
-//		
-//		String urlResponse = "";
-//		int index = 0;
-//		for(String url: urls) {
-//			Map<String, String> params = new HashMap<String, String>();
-//			if(index==0) {
-//				String value = requestBodyMap.get("\"name\"");
-//				params.put("name", value);
-//			}
-//			else {
-//				String value = requestBodyMap.get("\"some\"");
-//				params.put("some", value);
-//			}
-//			index++;
-//			urlResponse = urlResponse + " " + restTemplate.exchange(url, HttpMethod.GET, null, String.class, params).toString();	
-//		}
-//		return urlResponse;
-//	}
-	
 	//get response from calling apis, Querying apis
 	public String newRequestUrlInPost(
 			Map<String, String> requestBodyMap, Map<String, String> requestHeader, String url, Map<String,String[]> queryParameters ) {
@@ -65,19 +41,16 @@ public class TestService {
 		
 		RegisterNewApiObject registerNewApi = new RegisterNewApiObject();
 		
-//		registerNewApi = registerNewApiObjectRepository.findByNewEndpoint(fullUrl);
 		registerNewApi = this.slovingPathVariblesList(fullUrl);
 		if(registerNewApi != null) {
 		
 			Map<String,String> pathVaribles = new HashMap<String, String>();
 			
 			if(registerNewApi.getNewEndpoint().indexOf("}")!=-1) {
+				
 				pathVaribles = this.pathvaribleValue(fullUrl, registerNewApi.getNewEndpoint());
 			}
-//			else {
-//				pathVaribles = {};
-//			}
-			
+
 			List<QueryEndpoint> queryEndPoints =  registerNewApi.getQueryEndpoints();
 			List<Parameter> parameters = new ArrayList<Parameter>();
 			
@@ -87,19 +60,12 @@ public class TestService {
 			if(validation) {
 				RestTemplate restTemplate = new RestTemplate();
 				
-//				int countOfParameter=0;
-				
 				for(QueryEndpoint endpoint: queryEndPoints) {
 					
 					System.out.println(endpoint.getEndpoint());
-					//System.out.println("This query endpoints mappings : "+endpoint.getMappings());
 					
-					//Testing 
-		//			for(Mapping map : endpoint.getMapping()) {
-		//				System.out.println("This is from parameters: " + map.getParamname());
-		//			}
-					
-					SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrl(endpoint.getEndpoint());
+					//get api object
+					SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
 					parameters = saveNewApi.getParameters();
 					
 					String endPointUrl = endpoint.getEndpoint();
@@ -112,8 +78,10 @@ public class TestService {
 				    headers.setContentType(MediaType.APPLICATION_JSON);
 		
 					for(Parameter param: parameters) {
+		
 						if(!requestBodyMap.isEmpty()) {
 							for(String key: requestBodyMap.keySet()) {
+								
 								if(key.substring(1,key.length()-1).equals(param.getParamname())) {
 									String value = requestBodyMap.get(key);
 									
@@ -142,8 +110,10 @@ public class TestService {
 								}
 							}
 						}
+						
 						if(!requestHeader.isEmpty()) {
 							for(String key: requestHeader.keySet()) {
+								
 								if(key.equals(param.getParamname())) {
 									String value = requestHeader.get(key);
 									
@@ -171,8 +141,10 @@ public class TestService {
 								}
 							}
 						}
+						
 						if(!queryParameters.isEmpty()) {
 							for(String key: queryParameters.keySet()) {
+								
 								if(key.equals(param.getParamname())) {
 									String value = queryParameters.get(key)[0];
 									
@@ -201,8 +173,10 @@ public class TestService {
 								}
 							}
 						}
+						
 						if(pathVaribles != null || !pathVaribles.isEmpty()) {
 							for(String key: pathVaribles.keySet()) {
+								
 								if(key.equals(param.getParamname())) {
 									String value = pathVaribles.get(key);
 									
@@ -233,8 +207,6 @@ public class TestService {
 						}
 					}
 					
-//					countOfParameter = countOfParameter+ parameters.size();
-					
 					String typeOfEndpoint = saveNewApi.getType();
 					if(typeOfEndpoint.equals("GET")) {
 						HttpEntity<Object> entity = new HttpEntity<Object>(headers);
@@ -244,6 +216,13 @@ public class TestService {
 							fullResponse = fullResponse + " " +response+"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
+							try {
+								String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
+								fullResponse = fullResponse + " " +response+"\n";
+							}catch(Exception ex){
+								System.out.println("error : "+ex);
+								fullResponse = "500";
+							}
 						}
 					}
 					else if(typeOfEndpoint.equals("DELETE")) {
@@ -264,6 +243,13 @@ public class TestService {
 							fullResponse = fullResponse + response +"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
+							try {
+								String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
+								fullResponse = fullResponse + " " +response+"\n";
+							}catch(Exception ex){
+								System.out.println("error : "+ex);
+								fullResponse = "500";
+							}
 						}
 					}
 					else if(typeOfEndpoint.equals("PUT")) {
@@ -280,63 +266,16 @@ public class TestService {
 				}
 				
 				return fullResponse;
-//				int sizeOfRequestParameters = requestBodyMap.size() +queryParameters.size() + pathVaribles.size();
-//				System.out.println("This is request parameter size "+ sizeOfRequestParameters);
-//				
-//				int exceptHeaderParameter = countOfParameter-fullheaderCount;
-//				System.out.println("This is full parameter size: "+ exceptHeaderParameter);
-//				if(sizeOfRequestParameters == exceptHeaderParameter) {
-//					return fullResponse;
-//				}
-//				else {
-//					return "400";
-//				}
 			}
 			else {
 				return "400";
 			}
 			
-	//		RegisterNewApiObject registerNewApiTest = registerNewApiObjectRepository.findByLikeNewEndpoint(fullUrl);
-	//		System.out.println("this from test api : " + registerNewApiTest.getNewEndpoint());
-			
 		}
 		else {
-			return "500";
+			return "404";
 		}
 	}
-	
-	//Creating new api with path parameters
-//	public RegisterNewApiObject slovingPathVaribles(String url) {
-//		
-//		Map<Integer, String> pathVaribleValues = new HashMap<Integer, String>();
-//		
-//		RegisterNewApiObject registerNewApiTest = null;
-//		
-//		registerNewApiTest = registerNewApiObjectRepository.findByLikeNewEndpoint(url);
-//		
-//		String pathVarible = "";
-//		int index = 1;
-//		
-//		while(registerNewApiTest==null) {
-//			
-//			int lastIndexofSlash = url.lastIndexOf("/");
-//			
-//			pathVarible = url.substring(lastIndexofSlash+1);
-//			System.out.println(pathVarible);
-//			
-//			pathVaribleValues.put(index, pathVarible);
-//			
-//			url = url.substring(0,lastIndexofSlash);
-//					
-//			System.out.println("This is form url : "+url);
-//			registerNewApiTest = registerNewApiObjectRepository.findByLikeNewEndpoint(url);
-//		}
-//		
-//		System.out.println("This is url from object : "+registerNewApiTest.getNewEndpoint());
-//
-//		return registerNewApiTest;
-//		
-//	}
 	
 public RegisterNewApiObject slovingPathVariblesList(String url) {
 		
@@ -394,13 +333,11 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 				}
 			}
 		}
-	
-//		System.out.println("This is url from object : "+registerNewApi.getNewEndpoint());
 
 		return registerNewApi;
-		
 	}
 	
+//Getting path variable values
 	public Map<String, String> pathvaribleValue(String callingUrl, String savedUrl){
 		
 		int index = 0;
@@ -426,66 +363,53 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 	
 	//validating request parameters
 	public Boolean validationRequestParameters(List<QueryEndpoint> queryEndpoints, Map<String, String> requestBodyMap,
-			Map<String, String> requestHeader, Map<String,String[]> queryParameters, Map<String, String> pathVaribles) {		//
+			Map<String, String> requestHeader, Map<String,String[]> queryParameters, Map<String, String> pathVaribles) {
 		
 		//Request parameters in database
 		List<String> endpointsMandParameters = new ArrayList<String>();
-		List<Parameter> parameters = new ArrayList<Parameter>();	
 		
-		for(QueryEndpoint endpoint : queryEndpoints) {
+		queryEndpoints.forEach(endpoint -> {
+			SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
+			List<Parameter> params = saveNewApi.getParameters();
 			
-			SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrl(endpoint.getEndpoint());
-			parameters = saveNewApi.getParameters();
-			
-			for(Parameter param : parameters) {
-				
-				//check whether request parameter is mandatory
+			//collect mandatory parameters
+			params.stream().forEach(param->{
 				if(param.getMandatory()) {
-					
 					endpointsMandParameters.add(param.getParamname());
-				}
-			}
-		}
+				}});
+		});
 		
 		//Request parameters from filter
 		List<String> parameterFilter = new ArrayList<String>(); 
 		
 		//RequestBody parameters
 		if(!requestBodyMap.isEmpty()) {
-			for(String key : requestBodyMap.keySet()) {
-				parameterFilter.add(key.substring(1, key.length()-1));
-			}
+			requestBodyMap.entrySet().stream()
+			.forEach(entry -> parameterFilter.add(entry.getKey().substring(1, entry.getKey().length()-1)));
 		}
 		
 		//Header Parameters
 		if(!requestHeader.isEmpty()) {
-			for(String key : requestHeader.keySet()) {
-				parameterFilter.add(key);
-			}
+			requestHeader.entrySet().stream()
+			.forEach(entry -> parameterFilter.add(entry.getKey()));
 		}
 		
 		//Query parameters
 		if(!queryParameters.isEmpty()) {
-			for(String key: queryParameters.keySet()) {
-				parameterFilter.add(key);
-			}
+			queryParameters.entrySet().stream()
+			.forEach(entry -> parameterFilter.add(entry.getKey()));
 		}
 		
 		//Path variables
 		if(!pathVaribles.isEmpty()) {
-			for(String key: pathVaribles.keySet()) {
-				parameterFilter.add(key);
-			}
-		}
-		
-		int numOfMandParam = 0;
+			pathVaribles.entrySet().stream()
+			.forEach(entry -> parameterFilter.add(entry.getKey()));
+		}	
 		
 		//Checking mand parameters have in parameterFilter list
-		for(String parameterName : parameterFilter) {
-			if(endpointsMandParameters.contains(parameterName)) {
-				numOfMandParam++;
-			}
-		}
+		long numOfMandParam = parameterFilter.stream().filter(parameterName -> endpointsMandParameters.contains(parameterName)).count();
+		
+		System.out.println("Test Service line 412 : " + numOfMandParam);
 		
 		if(numOfMandParam >= endpointsMandParameters.size()) {
 			if(this.parameterValueEmptyOrNot(endpointsMandParameters, requestBodyMap, requestHeader, queryParameters, pathVaribles)) {
@@ -506,6 +430,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			Map<String, String> requestHeader, Map<String,String[]> queryParameters, Map<String, String> pathVaribles) {
 	
 		int parameterValueCount = 0;
+		
 		for(String mandtroyParamaterName : mandtoryParameters) {
 			
 			//Checking request Body
@@ -537,6 +462,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			}
 		}
 		
+		//given parameters and mandatory parameters
 		if(mandtoryParameters.size()==parameterValueCount) {
 			return true;
 		}
