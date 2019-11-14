@@ -12,9 +12,11 @@ import Swal from 'sweetalert2';
 })
 export class RegisterApiComponent implements OnInit {
 
-  options: FormGroup;
   requestParamNo:0;
   reponseParamNo:0;
+
+  options: FormGroup;
+
   arr = new Array<any>();
   requestValues = new Array<any>();
   requestParameters = new Array<any>();
@@ -23,7 +25,6 @@ export class RegisterApiComponent implements OnInit {
   responseTypes = new Array<any>();
   arrResponse = new Array<any>();
   requestMandatory = new Array<any>();
-
   pathVariables = new Array<any>();
 
   requestObj = {};
@@ -75,7 +76,6 @@ export class RegisterApiComponent implements OnInit {
           break;
         }
       }
-      //console.log(this.pathVariables);
       this.index = this.pathVariables.length;
       console.log(this.index);
     }
@@ -98,6 +98,7 @@ export class RegisterApiComponent implements OnInit {
     for(let i=0; i<this.responseParameters.length; i++){
       this.responseObj[this.responseParameters[i]] = this.responseTypes[i];
     }
+
     this.registerApi.requestparams = this.requestObj;
     this.registerApi.responseparams = this.responseObj;
     console.log(this.registerApi);
@@ -108,22 +109,19 @@ export class RegisterApiComponent implements OnInit {
         console.log(error.error.text);
         if(error.error.text == "Already regitered url"){
         Swal.fire('Oops...', 'Already Registered Api!', 'error');
-      }
-      else if(error.error.text == "Successfully register"){
-        Swal.fire('Success', "Successfully Registered",'success');
-        window.location.reload();
-      }
-      else if(error.error.text == "Bad Request" || error.error.error=="Internal Server Error"){
-        Swal.fire('Warning','Bad Api. Verifiaction failed', 'warning');
-      }
-      else{
-        Swal.fire('Oops...', 'Already Registered Api!', 'error');
-      }
-      console.log(error)
+        }
+        else if(error.error.text == "Successfully register"){
+          Swal.fire('Success', "Successfully Registered",'success');
+          window.location.reload();
+        }
+        else if(error.error.text == "Bad Request" || error.error.error=="Internal Server Error"){
+          Swal.fire('Warning','Bad Api. Verifiaction failed', 'warning');
+        }
+        else{
+          Swal.fire('Oops...', 'Already Registered Api!', 'error');
+        }
+        console.log(error)
     });
   }
 
-  // test():void{
-  //   console.log(this.requestMandatory);
-  // }
 }

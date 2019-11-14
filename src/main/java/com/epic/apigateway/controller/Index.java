@@ -112,24 +112,31 @@ public class Index {
         //Check api already registered or not
         SaveNewApiObj registeredApi = saveNewApiObjRepository.findByUrlAndType(saveNewApiBean.getEndpoint(), saveNewApiBean.getType());
         System.out.println("api " + registeredApi);
+        
         if (registeredApi != null) {
+        	
             return ResponseEntity.ok().body("Already registered url");
         } else {
+        	
             System.out.println(saveNewApiBean.getRequestValues());
             List<Parameter> requestParams = genrateListService.convertSetToListparameterWithType(saveNewApiBean.getRequestparams());
 
+            //Validating api
             int status = registerVerifyService.validateApi(saveNewApiBean.getEndpoint(), saveNewApiBean.getType(), requestParams, saveNewApiBean.getRequestValues());
             System.out.println("status " + status);
 
             if (status == 400) {
+            	
                 return ResponseEntity.ok().body("Bad Request");
             } else {
+            	
                 SaveNewApiObj DAObean = new SaveNewApiObj();
                 DAObean.setUrl(saveNewApiBean.getEndpoint());
                 DAObean.setType(saveNewApiBean.getType());
                 DAObean.setParameters(requestParams);
                 DAObean.setResponseAttributes(genrateListService.convertSetToListattributeWithType(saveNewApiBean.getResponseparams()));
                 saveNewApiObjRepository.save(DAObean);
+                
                 return ResponseEntity.ok().body("Successfully register");
             }
         }
@@ -285,75 +292,66 @@ public class Index {
     //Test url
     @GetMapping("/test/{id}/{name}")
     private ResponseEntity<String> testExistAPI(@PathVariable("id") String id, @PathVariable("name") String name) {
-
-//		List<String> response = new ArrayList<String>();
+    	
         String test = "Test is successful " + id + " " + name;
         System.out.println(test);
         return ResponseEntity.ok().body(test);
     }
 
+    //register a new query POST api
     @CrossOrigin("*")
     @PostMapping("/testRegister")
     private Responsebean registerNewApi(@RequestBody RegisterApiTemplateBean registerApiTemplateBean) {
+    	
         String endpoint = registerApiTemplateBean.getEndpoint();
         String type = registerApiTemplateBean.getType();
-
         RegisterNewApiObject registerNewApi = registerNewApiObjectRepository.findByNewEndpointAndType(endpoint, type);
+        
         if (registerNewApi != null) {
-            System.out.println("There is a already registered api");
 
             Responsebean responsebean = new Responsebean();
             responsebean.setCode("error");
             responsebean.setValue("Already registered Api");
             return responsebean;
+            
         } else {
-            System.out.println("There is no registered api");
+ 
             HashMap<String, CallListElement> endpointList = registerApiTemplateBean.getCall_list();
-
             List<QueryEndpoint> queryEndpoints = new ArrayList<QueryEndpoint>();
 
             for (String key : endpointList.keySet()) {
-            	
+            	//key = "http://localhost:4001/query/next-POST"
             	String urlAndType[] = key.split("-");
             	
-                //SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrl(key);
+            	//Get api object using url and type
             	SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrlAndType(urlAndType[0], urlAndType[1]);
                 QueryEndpoint queryEndpoint = new QueryEndpoint();
                 queryEndpoint.setEndpoint(urlAndType[0]);
-                //queryEndpoint.setEndpoint(key);
                 queryEndpoint.setType(saveNewApiObj.getType());
                 queryEndpoint.setParameters(saveNewApiObj.getParameters());
-                //queryEndpoint.setMappings(endpointList.get(key).getMappings());
-
-                //SetMapping new mapping
-//        		List<Mapping> mappings = new ArrayList<Mapping>();
-//        		for(String paramName: endpointList.get(key).getMappings().keySet()) {
-//        			Mapping map = new Mapping();
-//        			map.setParamname(paramName);
-//        			map.setMappingname(endpointList.get(key).getMappings().get(paramName));
-//        			//map.setQueryEndpoint(queryEndpoint);
-//        			mappings.add(map);
-//        		}
-//        		
-//        		queryEndpoint.setMapping(mappings);
-
+                
+                //get responseAttributes
                 String reponseAttributes[] = endpointList.get(key).getResponse_attribs();
                 List<ResponseAttribute> responseList = new ArrayList<ResponseAttribute>();
 
                 for (String reponseName : reponseAttributes) {
                     ResponseAttribute responseAttribute = new ResponseAttribute();
                     responseAttribute.setAttribute(reponseName);
-                    responseList.add(responseAttribute);
+                    responseList.add(responseAttribute);  
                 }
+                
                 queryEndpoint.setResponse_attribs(responseList);
                 queryEndpoints.add(queryEndpoint);
             }
+            
+            //Create Register new api object
             RegisterNewApiObject registerNewApiObject = new RegisterNewApiObject();
             registerNewApiObject.setNewEndpoint(endpoint);
             registerNewApiObject.setQueryEndpoints(queryEndpoints);
             registerNewApiObject.setType(type);
 
             Responsebean responsebean = new Responsebean();
+            
             try {
                 responsebean.setCode("ok");
                 responsebean.setValue(registerNewApiObjectRepository.save(registerNewApiObject));
@@ -361,14 +359,17 @@ public class Index {
                 responsebean.setCode("error");
                 responsebean.setValue(e.toString());
             }
+            
             return responsebean;
         }
     }
-
+    
+    //Testing api
     @PostMapping("/hsTest3/{uid}")
     private ResponseEntity<String> hsTest3(@PathVariable("uid") String uid, @RequestBody HashMap<String, String> requestBody) {
 
         String bodyOutput = "";
+        
         for (String key : requestBody.keySet()) {
             bodyOutput = bodyOutput + " " + requestBody.get(key);
         }
@@ -376,8 +377,10 @@ public class Index {
         return ResponseEntity.ok().body(bodyOutput + " " + uid);
     }
 
+    //Testing api
     @GetMapping("/testParam")
     private ResponseEntity<String> testParameters(@RequestParam String queryId) {
+    	
         return ResponseEntity.ok().body("this is id " + queryId);
     }
 

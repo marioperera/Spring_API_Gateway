@@ -35,45 +35,14 @@ export class PostApiComponent implements OnInit {
     });
     
   }
-  email = new FormControl('', [Validators.required]);
 
-  getErrorMessage() {
-    return this.email.hasError('required') ? 'You must enter a value' :
-        this.email.hasError('email') ? 'Not a valid email' :
-            '';
-  }
-
-  public changeidtominus(item,attribute_id){
-
-    attribute_id.id =-1;
-
-  }
-
-  public addtoUrlList(item){
-
-    this.attributes=new Array();
-
-    item.responseAttributes.forEach(attrib => {
-      if(attrib.id ==-1){
-        this.attributes.push(attrib.attribute)
-        
-      }
-    });
-    
-    var id:number =item.id;
-    console.log(item.id);
-    this.call_list[id] =this.attributes;
-    
-    console.log(this.call_list);
-    localStorage.setItem("call_list",JSON.stringify(this.call_list));
-      
-  }
-
+  //Selected api list
   public addSelectApiList(item){
     this.selectedAPi.push(item);
     console.log(this.selectedAPi);
   }
 
+  //submit selected api with new api
   public submitForm():void{
 
     this.registerNewQueryApi.type = "POST";
@@ -90,8 +59,9 @@ export class PostApiComponent implements OnInit {
       }
 
       responseArrObject["response_attribs"] = responseArr;
+
+      //concate url with type ex:"http://localhost:4001/some-POST"
       this.call_list[this.selectedAPi[i].url+"-"+this.selectedAPi[i].type] = responseArrObject;
-      //this.call_list[this.selectedAPi[i].url] = responseArrObject;
 
     }
 
