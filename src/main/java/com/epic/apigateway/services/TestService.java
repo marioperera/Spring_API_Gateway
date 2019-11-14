@@ -174,7 +174,7 @@ public class TestService {
 							}
 						}
 						
-						if(pathVaribles != null || !pathVaribles.isEmpty()) {
+						if(!pathVaribles.isEmpty() || pathVaribles != null) {
 							for(String key: pathVaribles.keySet()) {
 								
 								if(key.equals(param.getParamname())) {
@@ -374,7 +374,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			
 			//collect mandatory parameters
 			params.stream().forEach(param->{
-				if(param.getMandatory()) {
+				if(param.getMandatory()&& !endpointsMandParameters.contains(param.getParamname())) {
 					endpointsMandParameters.add(param.getParamname());
 				}});
 		});
@@ -470,10 +470,4 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			return false;
 		}
 	}
-	
-	public void testingFunction(String url) {
-		
-	}
-	
-	
 }
