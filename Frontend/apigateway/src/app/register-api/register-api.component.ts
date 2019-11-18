@@ -43,18 +43,21 @@ export class RegisterApiComponent implements OnInit {
   }
 
   addInput(): void{
+
     for(let i=0; i<this.requestParamNo; i++){
       this.arr[i] = i;
     }
   }
 
   addInputResponse(): void{
+
     for(let i=0; i<this.reponseParamNo; i++){
       this.arrResponse[i] = i;
     }
   }
 
   addUrl():void{
+
     var url = this.registerApi.endpoint;
     if(url.charAt(url.length-1)=="}"){
       console.log("There is a path variable");
@@ -111,11 +114,11 @@ export class RegisterApiComponent implements OnInit {
         Swal.fire('Oops...', 'Already Registered Api!', 'error');
         }
         else if(error.error.text == "Successfully register"){
-          Swal.fire('Success', "Successfully Registered",'success');
+          Swal.fire('Success', 'Successfully Registered','success');
           window.location.reload();
         }
         else if(error.error.text == "Bad Request" || error.error.error=="Internal Server Error"){
-          Swal.fire('Warning','Bad Api. Verifiaction failed', 'warning');
+          Swal.fire('Warning','Bad Api. Verification failed', 'warning');
         }
         else{
           Swal.fire('Oops...', 'Already Registered Api!', 'error');

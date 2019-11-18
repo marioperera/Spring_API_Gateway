@@ -78,10 +78,17 @@
                             <mat-form-field class="pl-2">
                                 <input matInput [(ngModel)]="requestValues[n]" placeholder="testing value">
                             </mat-form-field>
-                            <mat-radio-group [(ngModel)]="requestMandatory[n]">
-                                <mat-radio-button class="pr-3" value="true">Mandatory</mat-radio-button>
-                                <mat-radio-button class="" value="false">Not Mandatory</mat-radio-button>
-                            </mat-radio-group>
+                            <div *ngIf="requestTypes[n]=='param'">
+                                <mat-radio-group [(ngModel)]="requestMandatory[n]">
+                                    <mat-radio-button class="pr-3" value="true">Mandatory</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <div *ngIf="requestTypes[n]!='param'">
+                                <mat-radio-group [(ngModel)]="requestMandatory[n]">
+                                    <mat-radio-button class="pr-3" value="true" >Mandatory</mat-radio-button>
+                                    <mat-radio-button class="" value="false">Not Mandatory</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
                             <hr>
                         </div>
                         <mat-form-field>
