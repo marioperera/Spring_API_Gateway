@@ -303,6 +303,7 @@ public class Index {
     @PostMapping("/testRegister")
     private Responsebean registerNewApi(@RequestBody RegisterApiTemplateBean registerApiTemplateBean) {
     	
+    	System.out.println("Test RegisterCall");
         String endpoint = registerApiTemplateBean.getEndpoint();
         String type = registerApiTemplateBean.getType();
         RegisterNewApiObject registerNewApi = registerNewApiObjectRepository.findByNewEndpointAndType(endpoint, type);
@@ -321,12 +322,12 @@ public class Index {
 
             for (String key : endpointList.keySet()) {
             	//key = "http://localhost:4001/query/next-POST"
-            	String urlAndType[] = key.split("-");
+            	//String urlAndType[] = key.split("-");
             	
             	//Get api object using url and type
-            	SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.findByUrlAndType(urlAndType[0], urlAndType[1]);
+            	SaveNewApiObj saveNewApiObj = saveNewApiObjRepository.getOne(Integer.parseInt(key));
                 QueryEndpoint queryEndpoint = new QueryEndpoint();
-                queryEndpoint.setEndpoint(urlAndType[0]);
+                queryEndpoint.setEndpoint(saveNewApiObj.getUrl());
                 queryEndpoint.setType(saveNewApiObj.getType());
                 queryEndpoint.setParameters(saveNewApiObj.getParameters());
                 
@@ -382,6 +383,11 @@ public class Index {
     private ResponseEntity<String> testParameters(@RequestParam String queryId) {
     	
         return ResponseEntity.ok().body("this is id " + queryId);
+    }
+    
+    @GetMapping("/test/regex")
+    private List<SavenewApiDocument> testRegex(@RequestParam String url){
+    	return apiDocumentRepository.findByUrlLike("http://localhost:4001/api/query/ne");
     }
 
 }

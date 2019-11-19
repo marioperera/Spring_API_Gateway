@@ -19,7 +19,8 @@ export class RegisterApiService {
     return this.http.get('http://localhost:4001/api/getAllAPi');
   }
 
-  createNewQueryApi( registerNewQueryApi : RegisterNewQueryApi): Observable<any>{
+  //createNewQueryApi( registerNewQueryApi : RegisterNewQueryApi): Observable<any>{
+  createNewQueryApi( registerNewQueryApi): Observable<any>{
     console.log(registerNewQueryApi);
     return this.http.post('http://localhost:4001/api/testRegister', registerNewQueryApi);
 
