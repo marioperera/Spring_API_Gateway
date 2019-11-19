@@ -19,6 +19,8 @@ import com.epic.apigateway.dao.Parameter;
 import com.epic.apigateway.dao.QueryEndpoint;
 import com.epic.apigateway.dao.RegisterNewApiObject;
 import com.epic.apigateway.dao.SaveNewApiObj;
+import com.epic.apigateway.mongo.documents.SavenewApiDocument;
+import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
 import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
 import com.epic.apigateway.repositories.SaveNewApiObjRepository;
 
@@ -30,6 +32,9 @@ public class TestService {
 	@Autowired
 	SaveNewApiObjRepository saveNewApiObjRepo;
 	
+	@Autowired
+	ApiDocumentRepository apiDocumentRepository;
+	
 	//get response from calling apis, Querying apis
 	public String newRequestUrlInPost(
 			Map<String, String> requestBodyMap, Map<String, String> requestHeader, String url, Map<String,String[]> queryParameters ) {
@@ -39,19 +44,19 @@ public class TestService {
 		
 		String fullResponse = "";
 		
-		RegisterNewApiObject registerNewApi = new RegisterNewApiObject();
+		SavenewApiDocument registerNewApi = new SavenewApiDocument();
 		
 		registerNewApi = this.slovingPathVariblesList(fullUrl);
 		if(registerNewApi != null) {
 		
 			Map<String,String> pathVaribles = new HashMap<String, String>();
 			
-			if(registerNewApi.getNewEndpoint().indexOf("}")!=-1) {
+			if(registerNewApi.getUrl().indexOf("}")!=-1) {
 				
-				pathVaribles = this.pathvaribleValue(fullUrl, registerNewApi.getNewEndpoint());
+				pathVaribles = this.pathvaribleValue(fullUrl, registerNewApi.getUrl());
 			}
 
-			List<QueryEndpoint> queryEndPoints =  registerNewApi.getQueryEndpoints();
+			List<QueryEndpoint> queryEndPoints =  registerNewApi.getEndpoints();
 			List<Parameter> parameters = new ArrayList<Parameter>();
 			
 			//After this should have a validation
@@ -277,15 +282,15 @@ public class TestService {
 		}
 	}
 	
-public RegisterNewApiObject slovingPathVariblesList(String url) {
+public SavenewApiDocument slovingPathVariblesList(String url) {
 		
 		String originalUrl = url;
 		Map<Integer, String> pathVaribleValues = new HashMap<Integer, String>();
 		
-		List<RegisterNewApiObject> registerNewApiTestList = null;
-		RegisterNewApiObject registerNewApi = null;
+		List<SavenewApiDocument> registerNewApiTestList = null;
+		SavenewApiDocument registerNewApi = null;
 		
-		registerNewApiTestList = registerNewApiObjectRepository.findByLikeNewEndpointList(url);
+		registerNewApiTestList = apiDocumentRepository.findByUrlLike(url);
 		
 		String pathVarible = "";
 		int index = 1;
@@ -293,7 +298,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 		//slove same length url call as same
 		int bracketCount=0;
 		
-		while(registerNewApiTestList.isEmpty() && url.length()>25) {
+		while(registerNewApiTestList.isEmpty() && url.length()>27) {
 			
 			int lastIndexofSlash = url.lastIndexOf("/");
 			
@@ -307,7 +312,7 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 			bracketCount++;
 			
 			System.out.println("This is form url : "+url);
-			registerNewApiTestList = registerNewApiObjectRepository.findByLikeNewEndpointList(url);
+			registerNewApiTestList = apiDocumentRepository.findByUrlLike(url);
 		}
 		
 		
@@ -315,9 +320,9 @@ public RegisterNewApiObject slovingPathVariblesList(String url) {
 		int savedBracketcount = 0;
 		
 		if(registerNewApiTestList.size()>0) {
-			for(RegisterNewApiObject newApi : registerNewApiTestList) {
+			for(SavenewApiDocument newApi : registerNewApiTestList) {
 				
-				String[] savedUrlArr = newApi.getNewEndpoint().split("/");
+				String[] savedUrlArr = newApi.getUrl().split("/");
 				if(urlArr.length == savedUrlArr.length) {
 					for(String urlparts: savedUrlArr) {
 						

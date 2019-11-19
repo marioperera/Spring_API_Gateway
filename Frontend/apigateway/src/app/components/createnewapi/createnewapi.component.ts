@@ -3,6 +3,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {GetcurrentapisService} from '../../services/getcurrentapis.service';
 import { response } from 'src/app/Models/response';
 import Swal from 'sweetalert2';
+import {RegisterApiService} from '../../Services/register-api.service';
 
 @Component({
   selector: 'app-createnewapi',
@@ -17,7 +18,7 @@ export class CreatenewapiComponent implements OnInit {
   public register_error:boolean= false;
 
 
-  constructor(private geturlservice:GetcurrentapisService) { }
+  constructor(private geturlservice:GetcurrentapisService, private registerApiService:RegisterApiService) { }
 
   ngOnInit() {
   }
@@ -51,25 +52,48 @@ export class CreatenewapiComponent implements OnInit {
     console.log('retrievedObject: ', JSON.parse(retrievedObject));
     request_obj["call_list"] =JSON.parse(retrievedObject);
     console.log(JSON.stringify(request_obj));
-    this.geturlservice.generatenewAPI(request_obj).subscribe((res:response) =>{
-      try{
-        if(res.code=="error"){
-          this.register_error =true;
-          Swal.fire("Oops..! "," couldnt register api ",'error');
-          window.location.reload();
+
+    if(this.request_type=="POST"){
+      console.log("This is post");
+      this.geturlservice.generatenewAPI(request_obj).subscribe((data:response) =>{
+          console.log("register data");
+          console.log(data);
+          if(data.code=="error"){
+            Swal.fire('Opps', "This endpoint is already used",'error');
+          }
+          else{
+            Swal.fire('Success', "Successfully Registered",'success');
+  
+          }
+        },
+        error=>{
+  
+          Swal.fire('Opps', "Something went wrong",'error');
+          console.log(error);
           
-        }else{
-          this.register_error =false;
-          Swal.fire("Success"," New Api Created!! ",'success');
         }
-      }
-      catch(error){
-        
-      }
-      
-      
-    });
-    
+  
+      )
+    }
+    else if(this.request_type=="GET"){
+      this.geturlservice.generatenewAPI(request_obj).subscribe((res:response) =>{
+        try{
+          if(res.code=="error"){
+            this.register_error =true;
+            Swal.fire("Oops..! "," couldnt register api ",'error');
+            window.location.reload();
+            
+          }else{
+            this.register_error =false;
+            Swal.fire("Success"," New Api Created!! ",'success');
+          }
+        }
+        catch(error){
+          
+        }
+   
+      });
+    }
   }
 
 }
