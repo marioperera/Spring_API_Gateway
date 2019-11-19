@@ -1,0 +1,85 @@
+<div class="example-container" style="margin-left: 20%;"> 
+    <h5>
+        Select API's
+    </h5>
+    <div *ngIf="URL_list[0].length==0">
+        <b>No registerd API endpoints...!!!</b>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-card *ngFor="let item of URL_list[0]" class="bg-light">
+                    <div>
+                        {{item.url}}
+                        <br>
+                        <b>Response attributes form call this url</b>
+                        <div style="padding: 10px;" *ngFor="let attrb of item.responseAttributes">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    {{attrb.attribute}}
+                                </div>
+                                <div class="col-sm-2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <br>
+                            <div *ngIf="selectedAPi.includes(item)">
+                                <b style="color: brown;">This is selected<i class="material-icons">done_all</i></b>
+                            </div>
+                            <div *ngIf="!selectedAPi.includes(item)">
+                                <button type="button" (click)="addSelectApiList(item)" class="btn btn-primary">Select API</button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+                <div class="pb-3 pt-3" *ngIf="selectedAPi.length!=0">
+                    <mat-card class="bg-light">
+                        <h5>Create New api</h5>
+                        <div class="pb-1" *ngFor="let item of selectedAPi">
+                            <b>Your selected api : </b>{{item.url}}
+                            <br>
+                            <b>Request parameters for call this api : </b>
+                            <div class="pb-2 pt-2" *ngFor="let param of item.parameters">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{param.paramname}} :
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div *ngIf="param.mandatory==true">
+                                            <b>Mandatory Parameter</b>
+                                        </div>
+                                        <div *ngIf="param.mandatory==false">
+                                            <b>Not Mandatory Parameter</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-1">
+                                <button type="button" (click)="removeSelectedApi(selectedAPi.indexOf(item))" class="btn btn-danger pt-2">Remove</button>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class= "col-sm-4">
+                                <mat-select placeholder="Select api type">
+                                    <mat-option value="POST">POST</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a>
+                                http://localhost:4001/query/ 
+                                </a>
+                                <mat-form-field>
+                                    <input matInput id="endpoint" name="endpoint" [(ngModel)]="queryurl" placeholder="Enter New API endpoint" >
+                                </mat-form-field>
+                                <button type="button" (click)="submitForm()" class="btn btn-primary pt-2">Create New API</button>
+                            </div>
+                        </div>     
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
