@@ -11,6 +11,15 @@ public class Responsebean implements Serializable {
     String code;
     String status;
 
+    public Responsebean(String status,String code) {
+        this.code =code;
+        this.status =status;
+    }
+
+    public Responsebean() {
+
+    }
+
     public Object getValue() {
         return value;
     }

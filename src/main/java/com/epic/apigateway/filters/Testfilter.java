@@ -141,27 +141,7 @@ public class Testfilter extends OncePerRequestFilter {
                     httpServletResponse.sendError(400,"BAD REQUEST PLEASE CHECK YOUR REQUEST PARAMETERS "+br.getMessage());
                     filterChain.doFilter(httpServletRequest,httpServletResponse);
                 }
-//                    removing variables with null values
-//                    resultmap.remove(null);
-//
-//
-//                httpServletResponse.getWriter().write(finalResponse);
-//
-//            }else if(httpServletRequest.getMet
-//            hod().equals("GET")){
-//                try {
-//                    try{
-//                        HashMap<String,String> headerdetails = (HashMap<String, String>) webUtils.getHeadersInfo(httpServletRequest);
-//                        resultmap =partitionUrlService.captureGetParameters(httpServletRequest.getRequestURI(),httpServletRequest.getParameterMap(),headerdetails);
-//
-//
-//                    }catch (Exception br){
-//                        System.out.println(br.getMessage());
-//                        httpServletResponse.sendError(500,"BAD REQUEST PLEASE CHECK YOUR REQUEST PARAMETERS "+br.getMessage());
-//                        filterChain.doFilter(httpServletRequest,httpServletResponse);
-//                    }
-//
-//>>>>>>> 60704f44baf7294ac68d97f790dc3c419d7ced84
+
                     System.out.println(resultmap);
 //                    object to String mapper initialization
                     httpServletResponse.setContentType("Application/Json");

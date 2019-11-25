@@ -2,7 +2,6 @@ package com.epic.apigateway.utils;
 
 import com.epic.apigateway.filters.JWTAuthenticationFilter;
 import com.epic.apigateway.filters.JWTAuthorizationFilter;
-import com.epic.apigateway.filters.Testfilter;
 import com.epic.apigateway.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -16,8 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.epic.apigateway.utils.SecurityConstants.H2_DB_URL;
-import static com.epic.apigateway.utils.SecurityConstants.SIGN_UP_URL;
+import static com.epic.apigateway.utils.SecurityConstants.*;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -33,6 +31,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, UPDATE_USER_URL).permitAll()
                 .antMatchers(H2_DB_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -42,7 +41,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Override

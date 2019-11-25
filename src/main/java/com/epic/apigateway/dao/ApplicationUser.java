@@ -1,17 +1,33 @@
 package com.epic.apigateway.dao;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "APPLICATIONUSER")
 public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String username;
     private String password;
+    private String role;
+    private String isActive;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
+    }
 
     public long getId() {
         return id;
