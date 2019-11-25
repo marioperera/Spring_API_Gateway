@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
 import com.epic.apigateway.repositories.SaveNewApiObjRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Service
 public class TestService {
@@ -578,18 +580,21 @@ public SavenewApiDocument slovingPathVariblesList(String url) {
 	public HashMap<String, String> mappingArrayResponse(String responseArrString, HashMap<String, String> mappings, int count){
 
 		String responseStringWithoutLineSpaces = responseArrString.replaceAll("[\\n\\t ]", "");
-		
-		String stringResponseArr[] = responseStringWithoutLineSpaces.split("\\{");
 
+		
+//		String stringResponseArr[] = responseStringWithoutLineSpaces.split("\\{");
+		
+		ArrayList<String> stringResponseArrArrayList = this.getStringArr(responseStringWithoutLineSpaces);
+		
 		ObjectMapper mapper = new ObjectMapper();
 		
 		ArrayList<HashMap<String, String>> mappedResponseArr = new ArrayList<HashMap<String,String>>();
 		
 		HashMap<String, String> returnResponse = new HashMap<String, String>();
 		
-		for(int i=1; i<stringResponseArr.length; i++) {
-			String response = stringResponseArr[i];
-			response = "{"+response.substring(0, response.length()-1);
+		for(int i=1; i<stringResponseArrArrayList.size(); i++) {
+			
+			String response = stringResponseArrArrayList.get(i);
 			
 			HashMap<String, String> response_map = new HashMap<String, String>();
 			
@@ -624,6 +629,38 @@ public SavenewApiDocument slovingPathVariblesList(String url) {
 		
 		
 		return returnResponse;
-	} 
+	}
+	
+	public ArrayList<String> getStringArr(String responseString) {
+		
+		ArrayList<String> responseArr = new ArrayList<String>();
+		
+		Stack<String> stack = new Stack<String>();
+		
+		int fristIndex = 0;
+		int lastIndex = 0;
+		
+		for(int i=0; i<responseString.length(); i++) {
+			
+			if(responseString.charAt(i)=='{') {
+				if(stack.isEmpty()) {
+					fristIndex = i;
+				}
+				stack.push("{");
+			}
+			else if(responseString.charAt(i)=='}'){
+				if(stack.size()==1) {
+					lastIndex = i+1;
+				}
+				stack.pop();
+			}
+			
+			if( i!=0 && stack.isEmpty()) {
+				responseArr.add(responseString.substring(fristIndex, lastIndex));
+			}
+		}
+			
+		return responseArr;
+	}
 	
 }
