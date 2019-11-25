@@ -195,7 +195,14 @@ public class Index {
                 required_responses.add(new ResponseAttribute(s));
             });
             HashMap<String, String> user_request_mappings = registerApiTemplateBean.getCall_list().get(id).getMappings();
-            queryEndpoint.setMappings(user_request_mappings);
+            
+            //Change key to value value key
+            HashMap<String, String> changeMappingValueAndKey = new HashMap<String, String>();
+            for(String key: user_request_mappings.keySet()) {
+            	changeMappingValueAndKey.put(user_request_mappings.get(key), key);
+            }
+            
+            queryEndpoint.setMappings(changeMappingValueAndKey);
             System.out.println("user_request mappings" + user_request_mappings);
             queryEndpoint.setResponse_attribs(required_responses);
             queryobjects.add(queryEndpoint);

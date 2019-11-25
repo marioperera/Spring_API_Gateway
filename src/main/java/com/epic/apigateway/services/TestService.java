@@ -1,6 +1,7 @@
 package com.epic.apigateway.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import com.epic.apigateway.mongo.documents.SavenewApiDocument;
 import com.epic.apigateway.mongo.mongorepository.ApiDocumentRepository;
 import com.epic.apigateway.repositories.RegisterNewApiObjectRepository;
 import com.epic.apigateway.repositories.SaveNewApiObjRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TestService {
@@ -43,6 +46,7 @@ public class TestService {
 		System.out.println(fullUrl);
 		
 		String fullResponse = "";
+		HashMap<String, String> fullMapResponse = new HashMap<String, String>();
 		
 		SavenewApiDocument registerNewApi = new SavenewApiDocument();
 		
@@ -64,14 +68,16 @@ public class TestService {
 			
 			if(validation) {
 				RestTemplate restTemplate = new RestTemplate();
+				int queryEndpointCount = 1;
 				
 				for(QueryEndpoint endpoint: queryEndPoints) {
 					
 					System.out.println(endpoint.getEndpoint());
+					//System.out.println("This is Parameter list : "+ endpoint.getParameters().get(0).getParamname());
 					
 					//get api object
-					SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
-					parameters = saveNewApi.getParameters();
+//					SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
+					parameters = endpoint.getParameters();
 					
 					String endPointUrl = endpoint.getEndpoint();
 					
@@ -212,17 +218,26 @@ public class TestService {
 						}
 					}
 					
-					String typeOfEndpoint = saveNewApi.getType();
+					String typeOfEndpoint = endpoint.getType();
 					if(typeOfEndpoint.equals("GET")) {
 						HttpEntity<Object> entity = new HttpEntity<Object>(headers);
 						
 						try {
 							String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
+							
+							//String mappedResponse = this.mappingResponseObject(response, endpoint);
+							HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+							fullMapResponse.putAll(mapResponse);
+							
 							fullResponse = fullResponse + " " +response+"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
 							try {
 								String response = restTemplate.exchange(endPointUrl, HttpMethod.GET, entity, String.class, params).getBody();
+								
+								HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+								fullMapResponse.putAll(mapResponse);
+								
 								fullResponse = fullResponse + " " +response+"\n";
 							}catch(Exception ex){
 								System.out.println("error : "+ex);
@@ -235,9 +250,14 @@ public class TestService {
 						
 						try {
 							String response = restTemplate.exchange(endPointUrl, HttpMethod.DELETE, entity, String.class, params).getBody();
+							
+							HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+							fullMapResponse.putAll(mapResponse);
+							
 							fullResponse = fullResponse + " " +response+"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
+							fullResponse = "500";
 						}
 					}
 					else if(typeOfEndpoint.equals("POST")) {
@@ -245,11 +265,19 @@ public class TestService {
 						
 						try {
 							String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
+							
+							HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+							fullMapResponse.putAll(mapResponse);
+							
 							fullResponse = fullResponse + response +"\n";
 						}catch(Exception e) {
 							System.out.println("error : "+e);
 							try {
 								String response = restTemplate.exchange(endPointUrl, HttpMethod.POST, entity, String.class, params).getBody();
+								
+								HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+								fullMapResponse.putAll(mapResponse);
+								
 								fullResponse = fullResponse + " " +response+"\n";
 							}catch(Exception ex){
 								System.out.println("error : "+ex);
@@ -262,15 +290,38 @@ public class TestService {
 						
 						try {
 							String response = restTemplate.exchange(endPointUrl, HttpMethod.PUT, entity, String.class, params).getBody();
+							
+							HashMap<String, String> mapResponse = this.mappingResponseObject(response, endpoint, queryEndpointCount);
+							fullMapResponse.putAll(mapResponse);
+							
 							fullResponse = fullResponse + response + "\n";
 						}catch(Exception e) {
 							System.out.println("error : "+ e);
+							fullResponse = "500";
 						}
 					}
-					
+				queryEndpointCount++;	
 				}
 				
-				return fullResponse;
+				//Convert response object to json string
+				if(!fullResponse.equals("500")) {
+					
+					ObjectMapper mapper = new ObjectMapper();
+					fullMapResponse.remove(null);
+			        String json = "";
+			        
+			        try {
+			            json = mapper.writeValueAsString(fullMapResponse);
+
+			        } catch (JsonProcessingException e) {
+			            e.printStackTrace();
+			        }
+			        
+			        return json;
+				}
+				else {
+					return fullResponse;
+				}
 			}
 			else {
 				return "400";
@@ -374,8 +425,8 @@ public SavenewApiDocument slovingPathVariblesList(String url) {
 		List<String> endpointsMandParameters = new ArrayList<String>();
 		
 		queryEndpoints.forEach(endpoint -> {
-			SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
-			List<Parameter> params = saveNewApi.getParameters();
+//			SaveNewApiObj saveNewApi = saveNewApiObjRepo.findByUrlAndType(endpoint.getEndpoint(), endpoint.getType());
+			List<Parameter> params = endpoint.getParameters();
 			
 			//collect mandatory parameters
 			params.stream().forEach(param->{
@@ -475,4 +526,104 @@ public SavenewApiDocument slovingPathVariblesList(String url) {
 			return false;
 		}
 	}
+	
+	public HashMap<String, String> mappingResponseObject(String responseString, QueryEndpoint endpoint, int count) {
+		
+		HashMap<String, String> response_map = new HashMap<>();
+		HashMap<String, String> mappedResponse = new HashMap<String, String>();
+		HashMap<String, String> mappings = endpoint.getMappings();
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(responseString.charAt(0)!='[') {
+			try {
+	            Map<String, Object> map = mapper.readValue(responseString, Map.class);
+	            System.out.println(map.toString());
+	            map.forEach((k, v) -> {
+	            	
+	                String vv = String.valueOf(v);
+	                response_map.put(k, vv);
+	                
+	            });	
+	           
+			} catch (Exception e) {
+				    System.out.println(e);
+			}
+	       	        
+	        for(String key: response_map.keySet()) {
+	        	
+	        	if(mappings.containsKey(key)) {
+	        		mappedResponse.put(mappings.get(key), response_map.get(key));
+	        	}
+	        }
+	        
+	        mappedResponse.remove(null);
+	        String json = "";
+	        try {
+	            json = mapper.writeValueAsString(mappedResponse);
+
+	        } catch (JsonProcessingException e) {
+	            e.printStackTrace();
+	        }
+		}
+		else {
+
+			mappedResponse = this.mappingArrayResponse(responseString, mappings, count);
+		}
+              
+        
+		return mappedResponse;
+	}
+	
+	public HashMap<String, String> mappingArrayResponse(String responseArrString, HashMap<String, String> mappings, int count){
+
+		String responseStringWithoutLineSpaces = responseArrString.replaceAll("[\\n\\t ]", "");
+		
+		String stringResponseArr[] = responseStringWithoutLineSpaces.split("\\{");
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		ArrayList<HashMap<String, String>> mappedResponseArr = new ArrayList<HashMap<String,String>>();
+		
+		HashMap<String, String> returnResponse = new HashMap<String, String>();
+		
+		for(int i=1; i<stringResponseArr.length; i++) {
+			String response = stringResponseArr[i];
+			response = "{"+response.substring(0, response.length()-1);
+			
+			HashMap<String, String> response_map = new HashMap<String, String>();
+			
+			HashMap<String, String> mappedResponse = new HashMap<String, String>();
+			
+			
+			try {
+	            Map<String, Object> map = mapper.readValue(response, Map.class);
+	            
+	            map.forEach((k, v) -> {
+	            	
+	                String vv = String.valueOf(v);
+	                response_map.put(k, vv);
+	                
+	            });	
+	           
+			} catch (Exception e) {
+				    System.out.println(e);
+			}
+			
+			for(String key: response_map.keySet()) {
+	        	if(mappings.containsKey(key)) {
+	        		mappedResponse.put(mappings.get(key), response_map.get(key));
+	        	}
+	        }
+			
+			mappedResponseArr.add(mappedResponse);
+			//System.out.println(mappedResponse.toString());
+		}
+		System.out.println(mappedResponseArr);
+		returnResponse.put(Integer.toString(count), mappedResponseArr.toString());
+		
+		
+		return returnResponse;
+	} 
+	
 }
