@@ -14,10 +14,15 @@ export class SearchapiComponent implements OnInit {
   public ischecked:boolean = false;
   public URL_list:any[] =new Array();
   public attributes:any[];
-  public mapping:String="";
+  // public mapping:String="";
+  public mapping:any;
+  
   public call_list:any ={};
   public id_list:any[] =new Array();
   public mappings ={};
+  public responseMap = {};
+  public selectedList = {};
+  public responseAttributeMapping = {};
 
   constructor(private geturlservice:GetcurrentapisService) { }
 
@@ -29,8 +34,12 @@ export class SearchapiComponent implements OnInit {
       console.log(res);
       this.URL_list.push(res);
       console.log(this.URL_list[0]);
+
+      this.URL_list[0].forEach((element) => {
+        this.selectedList[element.id] = false;
+      });
+      console.log(this.selectedList);
     });
-    
   }
 
   ngAfterViewInit(){
@@ -78,7 +87,9 @@ export class SearchapiComponent implements OnInit {
     this.mapping =myElement.value;
     console.log(this.mapping,attribute);
     Swal.fire("proceed?","the mapping "+this.mapping+" will be added to the "+attribute,"question").then(()=>{
-      this.mappings[attribute] =this.mapping;
+      // this.mappings[attribute] =this.mapping;
+      this.mappings[this.mapping] = attribute;
+
       this.mapping ="";
     })
     
@@ -86,6 +97,14 @@ export class SearchapiComponent implements OnInit {
   }
 
   public addtoUrlList(item){
+
+    for(let responseName in this.responseAttributeMapping){
+      if(this.responseAttributeMapping[responseName]!=""){
+        this.responseMap[this.responseAttributeMapping[responseName]]= responseName;
+      }
+    }
+    console.log(this.responseMap);
+
     // console.log("log to console called");
     // console.log(item);
     this.attributes=new Array();
@@ -98,14 +117,38 @@ export class SearchapiComponent implements OnInit {
     // console.log(this.attributes);
     let apiurlobject ={};
     apiurlobject["response_attribs"] =this.attributes;
-    apiurlobject["mappings"] =this.mappings;
+    apiurlobject["mappings"] =this.responseMap;
     var id:number =item.id;
     console.log(item.id);
-    this.mappings = {};
+    this.responseMap = {};
     this.call_list[id] =apiurlobject;
     console.log(this.call_list);
+
+    this.selectedList[item.id] = "selected";
+
     localStorage.setItem("call_list",JSON.stringify(this.call_list));
     Swal.fire("Success","Url added to the api call list","success");
+  }
+
+  public selectedApi(id, responseAttributes){
+    this.selectedList[id]= true;
+    console.log(this.selectedList);
+
+    this.responseAttributeMapping={};
+    responseAttributes.forEach(element => {
+      this.responseAttributeMapping[element.attribute]="";
+    });
+    console.log(this.responseAttributeMapping);
+  }
+
+  public removeApi(id){
+    this.selectedList[id]= false;
+    this.responseAttributeMapping = {};
+    console.log(this.selectedList);
+  }
+
+  public test(){
+    console.log(this.responseAttributeMapping);
   }
 
 }
